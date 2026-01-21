@@ -13,7 +13,7 @@ It is an **intake and review repository only**. Games submitted here are **not l
    * Build your game in your own fork
    * Follow all required structure and lifecycle rules
   
-    (https://github.com/ape-church/ape-church-game-template/)[https://github.com/ape-church/ape-church-game-template/]
+  [https://github.com/ape-church/ape-church-game-template](https://github.com/ape-church/ape-church-game-template)
 
 2. **Create a folder for your team or partner**
 
