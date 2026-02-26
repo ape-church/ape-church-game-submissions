@@ -1,0 +1,86 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-submission:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed game folder
+        id: detect
+        run: |
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          GAME=$(echo "$CHANGED" | grep '^components/games/' | head -1 | cut -d'/' -f3)
+          echo "game=$GAME" >> $GITHUB_OUTPUT
+
+      - name: Check required component files exist
+        run: |
+          GAME=${{ steps.detect.outputs.game }}
+          if [ -z "$GAME" ]; then
+            echo "No game folder detected in components/games/"
+            exit 1
+          fi
+          echo "Checking required files for: $GAME"
+          for file in \
+            "components/games/$GAME" \
+            "public/$GAME/card.png" \
+            "public/$GAME/banner.png"; do
+            if [ ! -e "$file" ]; then
+              echo "MISSING: $file"
+              exit 1
+            fi
+          done
+          echo "All required files present."
+
+      - name: Check metadata.json exists and has required fields
+        run: |
+          GAME=${{ steps.detect.outputs.game }}
+          METADATA=$(find submissions -name "metadata.json" | grep "$GAME" | head -1)
+          if [ -z "$METADATA" ]; then
+            echo "MISSING: metadata.json for $GAME"
+            exit 1
+          fi
+          for field in team gameName displayTitle description authors category tags thumbnail mainComponent; do
+            VALUE=$(jq -r ".$field" "$METADATA")
+            if [ -z "$VALUE" ] || [ "$VALUE" = "null" ]; then
+              echo "MISSING metadata field: $field"
+              exit 1
+            fi
+          done
+          echo "metadata.json is valid."
+
+      - name: Check for forbidden files
+        run: |
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          for forbidden in "package.json" "next.config.ts" "next.config.js" "tsconfig.json"; do
+            if echo "$CHANGED" | grep -q "^$forbidden$"; then
+              echo "FORBIDDEN file in PR: $forbidden"
+              exit 1
+            fi
+          done
+          echo "No forbidden files found."
+
+      - name: Check for WAV files
+        run: |
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          if echo "$CHANGED" | grep -qi "\.wav$"; then
+            echo "WAV files are not allowed. Please use MP3 or OGG."
+            exit 1
+          fi
+          echo "No WAV files found."
+
+      - name: Install dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: TypeScript check
+        run: npx tsc --noEmit

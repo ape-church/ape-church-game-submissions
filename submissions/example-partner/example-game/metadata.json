@@ -1,0 +1,18 @@
+{
+    "team": "ape-church",
+    "gameName": "example-game",
+    "displayTitle": "Example Game",
+    "description": "This is an example game. Enter a description here - three sentences max.",
+    "authors": [
+      {
+        "name": "Ape Church"
+      }
+    ],
+    "status": "pending",
+    "category": "arcade",
+    "tags": ["arcade", "example", "game"],
+    "thumbnail": "/example-game/card.png",
+    "mainComponent": "ExampleGame.tsx",
+    "windowComponent": "ExampleGameWindow.tsx",
+    "setupComponent": "ExampleGameSetupCard.tsx"
+  }
