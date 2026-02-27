@@ -51,6 +51,7 @@ components/
       YourGame.tsx
       YourGameWindow.tsx
       YourGameSetupCard.tsx
+      yourGameConfig.ts       ← optional, for game configuration constants
       ... (any other game components)
 
 public/
@@ -93,6 +94,7 @@ Every submission requires a `metadata.json` file. Copy this template and fill in
   "mainComponent": "YourGame.tsx",
   "windowComponent": "YourGameWindow.tsx",
   "setupComponent": "YourGameSetupCard.tsx",
+  "configFile": "yourGameConfig.ts",
   "version": "1.0.0"
 }
 ```

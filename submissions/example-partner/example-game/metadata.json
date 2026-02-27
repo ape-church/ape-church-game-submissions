@@ -21,5 +21,6 @@
   "mainComponent": "ExampleGame.tsx",
   "windowComponent": "ExampleGameWindow.tsx",
   "setupComponent": "ExampleGameSetupCard.tsx",
+  "configFile": "exampleGameConfig.ts",
   "version": "1.0.0"
 }
