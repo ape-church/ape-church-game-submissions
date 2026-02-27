@@ -34,7 +34,7 @@ export const exampleGame: Game = {
     banner: "/submissions/example-game/banner.png", // 2:1 aspect ratio (e.g. 1024x512)
     advanceToNextStateAsset: "/submissions/example-game/advance-button.png",
     themeColorBackground: "#F54927",
-    song: "/submissions/example-game/audio/song.wav",
+    song: "/submissions/example-game/audio/song.mp3",
     payouts: {
         0: {
             0: { 0: 2847392, 1: 847291, 2: 492837, 3: 183746, 4: 937284, 5: 628394 },

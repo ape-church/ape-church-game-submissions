@@ -32,7 +32,7 @@ type GameWindowProps = {
     currentGameId: bigint;
 };
 
-const fallbackSong = "/audio/songs/fallback-song.wav";
+const fallbackSong = "/shared/audio/song.mp3";
 
 const GameWindow: React.FC<GameWindowProps> = ({
     game,
