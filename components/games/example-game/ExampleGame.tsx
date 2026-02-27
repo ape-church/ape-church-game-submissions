@@ -3,7 +3,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Gamepad2 } from "lucide-react";
-import { getPayout, randomBytes, exampleGame } from "@/lib/games";
+import { getPayout, randomBytes } from "@/lib/games";
+import { exampleGame } from "./exampleGameConfig";
 import GameWindow from "@/components/shared/GameWindow";
 import ExampleGameWindow from "./ExampleGameWindow";
 import ExampleGameSetupCard from "./ExampleGameSetupCard";
@@ -295,22 +296,6 @@ const ExampleGameComponent: React.FC = () => {
                     minBet={1}
                     maxBet={100}
                 />
-            </div>
-
-            {/* Game Title and History */}
-            <div className="mt-12 lg:mt-16">
-                <div className="flex items-center gap-2 mb-2">
-                    <Gamepad2 className="w-6 h-6 md:w-8 md:h-8" />
-                    <p className="font-medium text-xl sm:text-2xl">
-                        {game.title} History
-                    </p>
-                </div>
-                {/* <GameHistory
-          gameAddress={game.gameAddress}
-          gameId={game.id}
-          numGames={20}
-          currentGameId={currentGameId}
-        /> */}
             </div>
         </div>
     );
