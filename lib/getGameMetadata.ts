@@ -3,6 +3,7 @@ import path from 'path'
 
 export interface GameAuthor {
     name: string
+    email: string
 }
 
 export interface GameMetadata {
@@ -10,14 +11,16 @@ export interface GameMetadata {
     gameName: string
     displayTitle: string
     description: string
+    version: string
     authors: GameAuthor[]
     status: string
     category: string
     tags: string[]
     thumbnail: string
+    banner: string
     mainComponent: string
-    windowComponent?: string
-    setupComponent?: string
+    windowComponent: string
+    setupComponent: string
 }
 
 export async function getAllGameMetadata(): Promise<GameMetadata[]> {
