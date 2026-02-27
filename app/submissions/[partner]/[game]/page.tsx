@@ -11,9 +11,5 @@ export default async function Page({ params }: Props) {
 
     if (!Game) return notFound()
 
-    return (
-        <main>
-            <Game />
-        </main>
-    )
+    return <Game />
 }

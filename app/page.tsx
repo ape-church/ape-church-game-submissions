@@ -24,7 +24,7 @@ export default async function Page() {
             {game.thumbnail && (
               <div className="relative aspect-square w-full overflow-hidden">
                 <Image
-                  src={game.thumbnail}
+                  src={`/submissions${game.thumbnail}`}
                   alt={game.displayTitle}
                   fill
                   className="object-cover transition-transform group-hover:scale-105"

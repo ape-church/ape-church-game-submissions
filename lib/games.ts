@@ -28,13 +28,13 @@ export const exampleGame: Game = {
     title: "Example Game",
     description: "This is an example game",
     gameAddress: "0x1234567890123456789012345678901234567890",
-    gameBackground: "/example-game-assets/background.png",
+    gameBackground: "/submissions/example-game/background.png",
     // animatedBackground: "/example-game-assets/animated-background.mp4",
-    card: "/example-game-assets/card.png", // 1:1 aspect ratio (e.g. 512x512)
-    banner: "/example-game-assets/banner.png", // 2:1 aspect ratio (e.g. 1024x512)
-    advanceToNextStateAsset: "/example-game-assets/advance-button.png",
+    card: "/submissions/example-game/card.png", // 1:1 aspect ratio (e.g. 512x512)
+    banner: "/submissions/example-game/banner.png", // 2:1 aspect ratio (e.g. 1024x512)
+    advanceToNextStateAsset: "/submissions/example-game/advance-button.png",
     themeColorBackground: "#F54927",
-    // song: "/example-game-assets/audio/example_game-song.wav",
+    song: "/submissions/example-game/audio/song.wav",
     payouts: {
         0: {
             0: { 0: 2847392, 1: 847291, 2: 492837, 3: 183746, 4: 937284, 5: 628394 },

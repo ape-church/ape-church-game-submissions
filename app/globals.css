@@ -141,3 +141,13 @@
     @apply text-foreground;
   }
 }
+
+html {
+  background-image: url("/background.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-color: var(--background);
+  height: 100%;
+}

@@ -46,3 +46,11 @@ export async function getAllGameMetadata(): Promise<GameMetadata[]> {
 
     return games
 }
+
+export async function getGameMetadata(team: string, gameName: string): Promise<GameMetadata | null> {
+    const metadataPath = path.join(process.cwd(), 'submissions', team, gameName, 'metadata.json')
+    if (!fs.existsSync(metadataPath)) return null
+
+    const raw = fs.readFileSync(metadataPath, 'utf-8')
+    return JSON.parse(raw) as GameMetadata
+}
