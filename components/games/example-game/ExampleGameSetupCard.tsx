@@ -17,6 +17,7 @@ import { Info } from "lucide-react";
 import { Game } from "@/lib/games"; // Your game type
 import BetAmountInput from "@/components/shared/BetAmountInput";
 import { CustomSlider } from "@/components/shared/CustomSlider";
+import ChipSelection, { Chip } from "@/components/shared/ChipSelection";
 
 interface ExampleGameSetupCardProps {
     game: Game;
@@ -84,6 +85,16 @@ const ExampleGameSetupCard: React.FC<ExampleGameSetupCardProps> = ({
     // const themeColorText = game.themeColorText;
 
     const usdMode = false;
+
+    // Demo chip data for this example game
+    const chips: Chip[] = [
+        { id: "1", value: 1, image: "/shared/chips/chip_1.png" },
+        { id: "5", value: 5, image: "/shared/chips/chip_5.png" },
+        { id: "10", value: 10, image: "/shared/chips/chip_10.png" },
+        { id: "25", value: 25, image: "/shared/chips/chip_25.png" },
+    ];
+
+    const [selectedChipId, setSelectedChipId] = React.useState<string | null>(null);
 
     const getCurrentWalletAmount = (): number => {
         return walletBalance;
@@ -336,6 +347,14 @@ const ExampleGameSetupCard: React.FC<ExampleGameSetupCardProps> = ({
                             />
                         </div>
 
+                        {/* demo chip selection - note that this would not be used with the BetAmountInput */}
+                        <ChipSelection
+                            chips={chips}
+                            selectedChipId={selectedChipId}
+                            onChipSelect={(chip) => setSelectedChipId(chip.id)}
+                            onRemoveAllBets={() => setSelectedChipId(null)}
+                        />
+
                         {/* number of spins */}
                         <div className="mt-8">
                             <CustomSlider
@@ -349,6 +368,7 @@ const ExampleGameSetupCard: React.FC<ExampleGameSetupCardProps> = ({
                                 themeColor={themeColorBackground}
                             />
                         </div>
+
                     </CardContent>
 
                     <div className="grow"></div>
