@@ -1,70 +1,151 @@
-# Game Submissions
+# Ape Church Game Submissions
 
-This repository is used to **submit and review games** built using the official game template.
+This repository is the **intake and preview platform** for games built by Ape Church partners. Submitted games are reviewed here and, once approved, manually integrated into the live platform.
 
-It is an **intake and review repository only**. Games submitted here are **not live by default**.
+You can browse all submitted games at **[submissions.ape.church](https://submissions.ape.church)** *(update with your Vercel URL)*.
 
 ---
 
-## How to Submit a Game
+## Before You Start
 
-1. **Fork the `ape-church-game-template` repository**
+You will need:
+- A GitHub account
+- Your game built using the official game template
+- All assets compressed and ready (WebP or PNG, MP3 or OGG — no WAV files)
 
-   * Build your game in your own fork
-   * Follow all required structure and lifecycle rules
-  
-    [https://github.com/ape-church/ape-church-game-template](https://github.com/ape-church/ape-church-game-template)
+Game template: **[ape-church-game-template](https://github.com/ape-church/ape-church-game-template)**
 
-2. **Create a folder for your team or partner**
+---
 
-   * In this repository, submissions are organized by partner
-   * If this is your first submission, create a new top-level folder using your **team or partner name** (kebab-case)
+## Submission Flow
 
-3. **Add your game inside your team folder**
+### Step 1 — Build your game using the template
 
-   * Each game should live in its own folder
-   * One game per folder
+Go to the game template repository and click **"Use this template"** → **"Create a new repository"**. This creates a clean copy in your GitHub account.
 
-   Example structure:
+Build your game inside the template. The files you will submit are:
 
-   ```
-   submissions/
-   └── your-team-name/
-       └── your-game-name/
-           ├── README.md
-           ├── src/
-           ├── assets/
-           └── metadata.json
-   ```
+```
+components/games/your-game-name/     ← your game components
+public/your-game-name/               ← your game assets
+```
 
-4. **Open a Pull Request to this repository**
+Follow all lifecycle and structure requirements in the template README before submitting.
 
-   * Source: your forked repository
-   * Target: this repository (`game-submissions`)
-   * **One Pull Request per game**
+---
+
+### Step 2 — Fork this repository
+
+Fork `ape-church-game-submissions` into your GitHub account. Your PR will come from this fork.
+
+---
+
+### Step 3 — Add your game files
+
+In your fork, add exactly these files — nothing else:
+
+```
+components/
+  games/
+    your-game-name/
+      YourGame.tsx
+      YourGameWindow.tsx
+      YourGameSetupCard.tsx
+      ... (any other game components)
+
+public/
+  your-game-name/
+    card.png          ← REQUIRED, 1:1 aspect ratio (e.g. 512x512)
+    banner.png        ← REQUIRED, 2:1 aspect ratio (e.g. 1024x512)
+    ... (other assets)
+
+submissions/
+  your-team-name/
+    your-game-name/
+      metadata.json   ← REQUIRED, see schema below
+```
+
+> **One game per PR.** Do not include files from multiple games in a single pull request.
+
+---
+
+### Step 4 — Fill out metadata.json
+
+Every submission requires a `metadata.json` file. Copy this template and fill in every field:
+
+```json
+{
+  "team": "your-team-name",
+  "gameName": "your-game-name",
+  "displayTitle": "Your Game Title",
+  "description": "A short description of your game. Three sentences max.",
+  "authors": [
+    {
+      "name": "Your Name",
+      "email": "your@email.com"
+    }
+  ],
+  "status": "pending",
+  "category": "arcade",
+  "tags": ["arcade", "example"],
+  "thumbnail": "/your-game-name/card.png",
+  "banner": "/your-game-name/banner.png",
+  "mainComponent": "YourGame.tsx",
+  "windowComponent": "YourGameWindow.tsx",
+  "setupComponent": "YourGameSetupCard.tsx",
+  "version": "1.0.0"
+}
+```
+
+**Field notes:**
+- `team` and `gameName` must be kebab-case and match your folder names exactly
+- `category` must be one of: `arcade`, `card`, `puzzle`, `strategy`, `other`
+- `thumbnail` must be `/your-game-name/card.png`
+- `banner` must be `/your-game-name/banner.png`
+- `status` must be `"pending"` on submission — do not change this
+
+---
+
+### Step 5 — Open a Pull Request
+
+Open a PR from your fork to the `main` branch of this repository.
+
+**PR title format:** `[Team Name] Game Name` — e.g. `[Balloons] Ape Strong`
+
+When you open the PR, automated checks will run immediately. All checks must pass before your submission will be reviewed. If a check fails, the error message will tell you exactly what to fix.
 
 ---
 
 ## Review Process
 
-* All submissions are reviewed manually
-* Feedback or requested changes will be left on the Pull Request
-* You may be asked to update your submission before approval
+1. Automated checks run on your PR — fix any failures before waiting for review
+2. Our team reviews your code and leaves feedback directly on the PR
+3. Make any requested changes in your fork — the PR updates automatically
+4. Once approved, our team merges the PR and your game appears on the preview site
+5. Approved games are manually integrated into the live platform
+
+> Merging a PR does not guarantee production deployment. Approval and live launch are separate steps.
 
 ---
 
-## Important Notes
+## Do Not Include
 
-* Merging a Pull Request **does not** guarantee production deployment
-* Approved games are **manually integrated** into the live platform
-* This repository does not accept direct commits
+The following will cause your PR checks to fail:
+
+- `package.json`, `package-lock.json`
+- `next.config.ts` or `next.config.js`
+- `tsconfig.json`
+- Any files in `app/`, `lib/`, or `components/games/shared/`
+- `.wav` audio files (use MP3 or OGG)
 
 ---
 
 ## Questions or Issues
 
-If you have questions about the submission process, please refer to the game template documentation or contact the team through the official support channels.
+If you have questions while building or run into submission issues:
 
-* **Email:** [ministry@ape.church](mailto:ministry@ape.church)
-* **Telegram:** [https://t.me/+wgoE4TSxxcM5Njdh](https://t.me/+wgoE4TSxxcM5Njdh)
-* **Discord:** [https://discord.gg/3Jxeeqt59W](https://discord.gg/3Jxeeqt59W)
+- **Email:** [ministry@ape.church](mailto:ministry@ape.church)
+- **Telegram:** [https://t.me/+wgoE4TSxxcM5Njdh](https://t.me/+wgoE4TSxxcM5Njdh)
+- **Discord:** [https://discord.gg/3Jxeeqt59W](https://discord.gg/3Jxeeqt59W)
+
+When reaching out, include your PR link and a description of the issue.

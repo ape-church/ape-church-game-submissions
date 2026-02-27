@@ -1,0 +1,290 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-submission:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── 1. Detect the submitted game name ──────────────────────────────
+      - name: Detect submitted game name
+        id: detect
+        run: |
+          echo "──────────────────────────────────────"
+          echo "Step 1 · Detecting game folder"
+          echo "──────────────────────────────────────"
+
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          GAME=$(echo "$CHANGED" | grep '^components/games/' | head -1 | cut -d'/' -f3)
+
+          if [ -z "$GAME" ]; then
+            echo "::error::No game folder detected under components/games/"
+            exit 1
+          fi
+
+          PARTNER=$(echo "$CHANGED" | grep '^submissions/' | head -1 | cut -d'/' -f2)
+
+          echo "Detected game:    $GAME"
+          echo "Detected partner: $PARTNER"
+          echo "game=$GAME" >> "$GITHUB_OUTPUT"
+          echo "partner=$PARTNER" >> "$GITHUB_OUTPUT"
+
+      # ── 2. Required files check ────────────────────────────────────────
+      - name: Required files check
+        run: |
+          echo "──────────────────────────────────────"
+          echo "Step 2 · Checking required files"
+          echo "──────────────────────────────────────"
+
+          GAME="${{ steps.detect.outputs.game }}"
+          PARTNER="${{ steps.detect.outputs.partner }}"
+          FAIL=0
+
+          # components/games/[game]/ must exist and be non-empty
+          if [ ! -d "components/games/$GAME" ] || [ -z "$(ls -A "components/games/$GAME")" ]; then
+            echo "::error::MISSING or EMPTY: components/games/$GAME/"
+            FAIL=1
+          else
+            echo "✓ components/games/$GAME/ exists and is non-empty"
+          fi
+
+          # public/[game]/card.png
+          if [ ! -f "public/$GAME/card.png" ]; then
+            echo "::error::MISSING: public/$GAME/card.png"
+            FAIL=1
+          else
+            echo "✓ public/$GAME/card.png"
+          fi
+
+          # public/[game]/banner.png
+          if [ ! -f "public/$GAME/banner.png" ]; then
+            echo "::error::MISSING: public/$GAME/banner.png"
+            FAIL=1
+          else
+            echo "✓ public/$GAME/banner.png"
+          fi
+
+          # submissions/[partner]/[game]/metadata.json
+          METADATA=$(find submissions -path "*/\$GAME/metadata.json" 2>/dev/null | head -1)
+          if [ -z "$METADATA" ]; then
+            echo "::error::MISSING: submissions/*/$GAME/metadata.json"
+            FAIL=1
+          else
+            echo "✓ $METADATA"
+          fi
+
+          if [ "$FAIL" -eq 1 ]; then exit 1; fi
+          echo ""
+          echo "All required files present."
+
+      # ── 3. Metadata validation ─────────────────────────────────────────
+      - name: Metadata validation
+        run: |
+          echo "──────────────────────────────────────"
+          echo "Step 3 · Validating metadata.json"
+          echo "──────────────────────────────────────"
+
+          GAME="${{ steps.detect.outputs.game }}"
+          METADATA=$(find submissions -path "*/$GAME/metadata.json" | head -1)
+          FAIL=0
+
+          check_field() {
+            local field="$1"
+            local value
+            value=$(jq -r ".$field // empty" "$METADATA")
+            if [ -z "$value" ]; then
+              echo "::error::MISSING metadata field: $field"
+              FAIL=1
+            else
+              echo "✓ $field = $value"
+            fi
+          }
+
+          # Required string fields
+          for field in team gameName displayTitle description version mainComponent windowComponent setupComponent; do
+            check_field "$field"
+          done
+
+          # thumbnail must equal /[gameName]/card.png
+          THUMB=$(jq -r '.thumbnail // empty' "$METADATA")
+          EXPECTED_THUMB="/$GAME/card.png"
+          if [ "$THUMB" != "$EXPECTED_THUMB" ]; then
+            echo "::error::thumbnail must be \"$EXPECTED_THUMB\" but got \"$THUMB\""
+            FAIL=1
+          else
+            echo "✓ thumbnail = $THUMB"
+          fi
+
+          # banner must equal /[gameName]/banner.png
+          BANNER=$(jq -r '.banner // empty' "$METADATA")
+          EXPECTED_BANNER="/$GAME/banner.png"
+          if [ "$BANNER" != "$EXPECTED_BANNER" ]; then
+            echo "::error::banner must be \"$EXPECTED_BANNER\" but got \"$BANNER\""
+            FAIL=1
+          else
+            echo "✓ banner = $BANNER"
+          fi
+
+          # gameName must match detected folder name
+          META_GAME=$(jq -r '.gameName // empty' "$METADATA")
+          if [ "$META_GAME" != "$GAME" ]; then
+            echo "::error::gameName in metadata (\"$META_GAME\") does not match folder name (\"$GAME\")"
+            FAIL=1
+          else
+            echo "✓ gameName matches folder"
+          fi
+
+          # status must be "pending"
+          STATUS=$(jq -r '.status // empty' "$METADATA")
+          if [ "$STATUS" != "pending" ]; then
+            echo "::error::status must be \"pending\" but got \"$STATUS\""
+            FAIL=1
+          else
+            echo "✓ status = pending"
+          fi
+
+          # category must be one of: arcade, card, puzzle, strategy, other
+          CATEGORY=$(jq -r '.category // empty' "$METADATA")
+          case "$CATEGORY" in
+            arcade|card|puzzle|strategy|other)
+              echo "✓ category = $CATEGORY"
+              ;;
+            *)
+              echo "::error::category must be one of: arcade, card, puzzle, strategy, other — got \"$CATEGORY\""
+              FAIL=1
+              ;;
+          esac
+
+          # tags must be a non-empty array
+          TAG_COUNT=$(jq '.tags | if type == "array" then length else 0 end' "$METADATA")
+          if [ "$TAG_COUNT" -eq 0 ]; then
+            echo "::error::tags must be a non-empty array"
+            FAIL=1
+          else
+            echo "✓ tags ($TAG_COUNT entries)"
+          fi
+
+          # authors must be a non-empty array with name and email on each entry
+          AUTHOR_COUNT=$(jq '.authors | if type == "array" then length else 0 end' "$METADATA")
+          if [ "$AUTHOR_COUNT" -eq 0 ]; then
+            echo "::error::authors must be a non-empty array"
+            FAIL=1
+          else
+            BAD_AUTHORS=$(jq '[.authors[] | select(.name == null or .name == "" or .email == null or .email == "")] | length' "$METADATA")
+            if [ "$BAD_AUTHORS" -gt 0 ]; then
+              echo "::error::Every author must have a non-empty \"name\" and \"email\""
+              FAIL=1
+            else
+              echo "✓ authors ($AUTHOR_COUNT entries, all have name + email)"
+            fi
+          fi
+
+          if [ "$FAIL" -eq 1 ]; then exit 1; fi
+          echo ""
+          echo "metadata.json is valid."
+
+      # ── 4. Forbidden files check ───────────────────────────────────────
+      - name: Forbidden files check
+        run: |
+          echo "──────────────────────────────────────"
+          echo "Step 4 · Checking for forbidden files"
+          echo "──────────────────────────────────────"
+
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          FAIL=0
+
+          # Exact file matches
+          for forbidden in "package.json" "package-lock.json" "next.config.ts" "next.config.js" "tsconfig.json"; do
+            if echo "$CHANGED" | grep -q "^${forbidden}$"; then
+              echo "::error::FORBIDDEN file modified: $forbidden"
+              FAIL=1
+            fi
+          done
+
+          # Directory prefix matches
+          for prefix in "app/" "lib/" "components/shared/"; do
+            HITS=$(echo "$CHANGED" | grep "^${prefix}" || true)
+            if [ -n "$HITS" ]; then
+              echo "::error::FORBIDDEN — builders must not modify files under ${prefix}"
+              echo "$HITS" | while read -r f; do echo "  · $f"; done
+              FAIL=1
+            fi
+          done
+
+          if [ "$FAIL" -eq 1 ]; then exit 1; fi
+          echo "✓ No forbidden files found."
+
+      # ── 5. Asset checks ────────────────────────────────────────────────
+      - name: Asset checks
+        run: |
+          echo "──────────────────────────────────────"
+          echo "Step 5 · Checking assets"
+          echo "──────────────────────────────────────"
+
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          FAIL=0
+
+          # WAV files — hard fail
+          WAV_FILES=$(echo "$CHANGED" | grep -i '\.wav$' || true)
+          if [ -n "$WAV_FILES" ]; then
+            echo "::error::WAV files are not allowed. Use MP3 or OGG instead."
+            echo "$WAV_FILES" | while read -r f; do echo "  · $f"; done
+            FAIL=1
+          else
+            echo "✓ No WAV files"
+          fi
+
+          # Large PNGs over 1 MB — warn only
+          LARGE_PNGS=""
+          for f in $(echo "$CHANGED" | grep -i '\.png$' || true); do
+            if [ -f "$f" ]; then
+              SIZE=$(stat -c%s "$f" 2>/dev/null || stat -f%z "$f" 2>/dev/null || echo 0)
+              if [ "$SIZE" -gt 1048576 ]; then
+                LARGE_PNGS="$LARGE_PNGS\n  · $f ($(( SIZE / 1024 )) KB)"
+              fi
+            fi
+          done
+          if [ -n "$LARGE_PNGS" ]; then
+            echo "::warning::Large PNG files detected (>1 MB). Consider compressing them:"
+            echo -e "$LARGE_PNGS"
+          else
+            echo "✓ No oversized PNGs"
+          fi
+
+          if [ "$FAIL" -eq 1 ]; then exit 1; fi
+
+      # ── 6. TypeScript check ────────────────────────────────────────────
+      - name: Install dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: TypeScript check
+        run: |
+          echo "──────────────────────────────────────"
+          echo "Step 6 · TypeScript compilation check"
+          echo "──────────────────────────────────────"
+          npx tsc --noEmit
+          echo "✓ TypeScript compiled with no errors"
+
+      # ── 7. Summary ─────────────────────────────────────────────────────
+      - name: Summary
+        if: success()
+        run: |
+          GAME="${{ steps.detect.outputs.game }}"
+          PARTNER="${{ steps.detect.outputs.partner }}"
+          echo ""
+          echo "══════════════════════════════════════"
+          echo "  ALL CHECKS PASSED"
+          echo "══════════════════════════════════════"
+          echo "  Game:    $GAME"
+          echo "  Partner: $PARTNER"
+          echo "══════════════════════════════════════"
