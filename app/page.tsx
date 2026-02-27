@@ -7,7 +7,7 @@ export default async function Page() {
 
   return (
     <main>
-      <h1 className="text-3xl sm:text-4xl font-bold mb-2">Ape Church Games</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold mb-2">Ape Church Game Submissions</h1>
       <p className="text-muted-foreground mb-8">Browse submitted games</p>
 
       {games.length === 0 && (

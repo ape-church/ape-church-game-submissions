@@ -1,12 +1,12 @@
 {
-  "team": "ape-church",
+  "team": "example-partner",
   "gameName": "example-game",
   "displayTitle": "Example Game",
   "description": "This is an example game. Enter a description here - three sentences max.",
   "authors": [
     {
-      "name": "Ape Church",
-      "email": "ministry@ape.church"
+      "name": "Example Partner",
+      "email": "example@example.com"
     }
   ],
   "status": "pending",
