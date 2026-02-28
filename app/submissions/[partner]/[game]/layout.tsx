@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { getGameMetadata } from '@/lib/getGameMetadata'
+import StatusBadge from '@/components/shared/StatusBadge'
 
 interface Props {
     params: Promise<{ partner: string; game: string }>
@@ -22,8 +23,10 @@ export default async function GameLayout({ params, children }: Props) {
                 Back to all game submissions
             </Link>
 
-            <h1 className="text-3xl font-semibold mb-4 sm:mb-6">{title}</h1>
-
+            <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                <h1 className="text-3xl font-semibold">{title}</h1>
+                {metadata?.status && <StatusBadge status={metadata.status} />}
+            </div>
             {children}
         </div>
     )

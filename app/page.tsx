@@ -1,6 +1,7 @@
-import { getAllGameMetadata } from '@/lib/getGameMetadata'
 import Link from 'next/link'
 import Image from 'next/image'
+import { getAllGameMetadata } from '@/lib/getGameMetadata'
+import StatusBadge from '@/components/shared/StatusBadge'
 
 export default async function Page() {
   const games = await getAllGameMetadata()
@@ -19,8 +20,11 @@ export default async function Page() {
           <Link
             key={game.gameName}
             href={`/submissions/${game.team}/${game.gameName}`}
-            className="group rounded-xl border border-card-border bg-card overflow-hidden transition-all hover:border-primary/40 hover:shadow-lg"
+            className="relative group rounded-xl border border-card-border bg-card overflow-hidden transition-all hover:border-primary/40 hover:shadow-lg"
           >
+            <div className="absolute top-2 right-2 z-10">
+              <StatusBadge status={game.status} />
+            </div>
             {game.thumbnail && (
               <div className="relative aspect-square w-full overflow-hidden">
                 <Image
