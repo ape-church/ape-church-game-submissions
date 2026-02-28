@@ -27,7 +27,7 @@ Build your game inside the template. The files you will submit are:
 
 ```
 components/games/your-game-name/     ← your game components
-public/your-game-name/               ← your game assets
+public/submissions/your-game-name/   ← your game assets
 ```
 
 Follow all lifecycle and structure requirements in the template README before submitting.
@@ -55,10 +55,11 @@ components/
       ... (any other game components)
 
 public/
-  your-game-name/
-    card.png          ← REQUIRED, 1:1 aspect ratio (e.g. 512x512)
-    banner.png        ← REQUIRED, 2:1 aspect ratio (e.g. 1024x512)
-    ... (other assets)
+  submissions/
+    your-game-name/
+      card.png          ← REQUIRED, 1:1 aspect ratio (e.g. 512x512)
+      banner.png        ← REQUIRED, 2:1 aspect ratio (e.g. 1024x512)
+      ... (other assets)
 
 submissions/
   your-team-name/
