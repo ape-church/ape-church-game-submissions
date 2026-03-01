@@ -11,8 +11,11 @@
   "status": "pending",
   "category": "arcade",
   "tags": ["arcade", "chicken", "crossing", "traffic", "cashout"],
-  "thumbnail": "assets/card.png",
+  "thumbnail": "/chicken-crossing/card.png",
+  "banner": "/chicken-crossing/banner.png",
   "mainComponent": "ChickenCrossing.tsx",
   "windowComponent": "ChickenCrossingWindow.tsx",
-  "setupComponent": "ChickenCrossingSetupCard.tsx"
+  "setupComponent": "ChickenCrossingSetupCard.tsx",
+  "configFile": "chickenGameConfig.ts",
+  "version": "1.0.0"
 }

@@ -6,8 +6,8 @@ import { Gamepad2 } from "lucide-react";
 import { Howl } from "howler";
 import { bytesToHex } from "viem";
 import { toast } from "sonner";
-import { Game, randomBytes } from "@/lib/gameConfig";
-import GameWindow from "@/components/GameWindow";
+import { Game, randomBytes } from "@/lib/games";
+import GameWindow from "@/components/shared/GameWindow";
 import ChickenCrossingWindow from "./ChickenCrossingWindow";
 import ChickenCrossingSetupCard from "./ChickenCrossingSetupCard";
 import {
@@ -16,7 +16,7 @@ import {
     getDifficultyMaxSafeLanes,
     getChickenMultiplier,
     resolveMaxSafeLanes,
-} from "@/lib/chickenGameConfig";
+} from "./chickenGameConfig";
 
 interface ChickenCrossingProps {
     game: Game;
@@ -43,12 +43,12 @@ const ROUND_END_MS = 900;
 const REWATCH_STEP_MS = 420;
 const AUTO_JUMP_DELAY_MS = 140;
 const LANDING_COLLISION_SAMPLE_DELAY_MS = 24;
-const CHICKEN_AMBIENCE_LOOP_SRC = "/chicken-crossing-assets/audio/chicken-street-sound.mp3";
-const CHICKEN_MUSIC_LOOP_SRC = "/chicken-crossing-assets/audio/chicken-street-music.mp3";
-const CHICKEN_JUMP_SFX_SRC = "/chicken-crossing-assets/audio/jump.mp3";
-const CHICKEN_DEATH_SFX_SRC = "/chicken-crossing-assets/audio/death.mp3";
-const CHICKEN_SEWER_LID_SFX_SRC = "/chicken-crossing-assets/audio/sewer-lid.mp3";
-const CHICKEN_BARRIER_CRASH_SFX_SRC = "/chicken-crossing-assets/audio/car-crash.mp3";
+const CHICKEN_AMBIENCE_LOOP_SRC = "/submissions/chicken-crossing/audio/chicken-street-sound.mp3";
+const CHICKEN_MUSIC_LOOP_SRC = "/submissions/chicken-crossing/audio/chicken-street-music.mp3";
+const CHICKEN_JUMP_SFX_SRC = "/submissions/chicken-crossing/audio/jump.mp3";
+const CHICKEN_DEATH_SFX_SRC = "/submissions/chicken-crossing/audio/death.mp3";
+const CHICKEN_SEWER_LID_SFX_SRC = "/submissions/chicken-crossing/audio/sewer-lid.mp3";
+const CHICKEN_BARRIER_CRASH_SFX_SRC = "/submissions/chicken-crossing/audio/car-crash.mp3";
 const CHICKEN_AMBIENCE_VOLUME = 0.5;
 const CHICKEN_MUSIC_VOLUME = 0.3;
 const CHICKEN_JUMP_SFX_VOLUME = 0.45;

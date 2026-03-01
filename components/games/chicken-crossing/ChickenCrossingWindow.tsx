@@ -2,7 +2,7 @@ import React from "react";
 import {
     Difficulty,
     getChickenMultiplier,
-} from "@/lib/chickenGameConfig";
+} from "./chickenGameConfig";
 import ChickenSVG, { ChickenState } from "./svg/ChickenSVG";
 import VehicleSVG, { VehicleType } from "./svg/VehicleSVG";
 import EnvironmentSVG from "./svg/EnvironmentSVG";

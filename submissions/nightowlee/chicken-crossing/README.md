@@ -39,15 +39,15 @@ Players advance one lane at a time to increase multiplier, then cash out before 
 
 ## Assets
 
-- Game assets: `public/chicken-crossing-assets/`
-- Audio assets: `public/chicken-crossing-assets/audio/`
+- Game assets: `public/submissions/chicken-crossing/`
+- Audio assets: `public/submissions/chicken-crossing/audio/`
 - Required listing assets included:
   - `card.png`
   - `banner.png`
 
 ## Notes for Review
 
-- Built as a game-specific implementation under `components/chicken-crossing/`
+- Built as a game-specific implementation under `components/games/chicken-crossing/`
 - Shared template engine components were kept as the base
 - Repo-wide lint may include template/example file warnings; chicken-game path lint passes
 

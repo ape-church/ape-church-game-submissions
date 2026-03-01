@@ -1,4 +1,4 @@
-import { Game } from "./gameConfig";
+import { Game } from "@/lib/games";
 
 export const CHICKEN_MAX_SAFE_LANES = 19;
 export const CHICKEN_FINISH_LANE = CHICKEN_MAX_SAFE_LANES + 1;
@@ -8,12 +8,11 @@ export const chickenGame: Game = {
     title: "Chicken Crossing",
     description: "Cross the road to increase your multiplier. Cash out before you get hit!",
     gameAddress: "0x1234567890123456789012345678901234567890",
-    gameBackground: "/chicken-crossing-assets/road_background.png",
-    card: "/chicken-crossing-assets/card.png",
-    banner: "/chicken-crossing-assets/banner.png",
-    // Keep template GameWindow music slot occupied with a silent loop.
-    // ChickenCrossing.tsx manages the actual music + ambience tracks with custom volumes.
-    song: "/chicken-crossing-assets/audio/silence.wav",
+    gameBackground: "/submissions/chicken-crossing/road_background.png",
+    card: "/submissions/chicken-crossing/card.png",
+    banner: "/submissions/chicken-crossing/banner.png",
+    // Use an MP3 track for template-level song playback; in-game component also handles layered audio.
+    song: "/submissions/chicken-crossing/audio/chicken-street-music.mp3",
     themeColorBackground: "#00E701",
     payouts: {
         0: {

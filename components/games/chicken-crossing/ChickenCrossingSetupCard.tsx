@@ -5,13 +5,13 @@ import {
     CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Game } from "@/lib/gameConfig";
+import { Game } from "@/lib/games";
 import {
     Difficulty,
     getChickenMultiplier,
     getCrashProbability,
-} from "@/lib/chickenGameConfig";
-import BetAmountInput from "../BetAmountInput";
+} from "./chickenGameConfig";
+import BetAmountInput from "@/components/shared/BetAmountInput";
 
 interface ChickenCrossingSetupCardProps {
     game: Game;
