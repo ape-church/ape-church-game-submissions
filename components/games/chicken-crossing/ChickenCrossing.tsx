@@ -6,21 +6,18 @@ import { Gamepad2 } from "lucide-react";
 import { Howl } from "howler";
 import { bytesToHex } from "viem";
 import { toast } from "sonner";
-import { Game, randomBytes } from "@/lib/games";
+import { randomBytes } from "@/lib/games";
 import GameWindow from "@/components/shared/GameWindow";
 import ChickenCrossingWindow from "./ChickenCrossingWindow";
 import ChickenCrossingSetupCard from "./ChickenCrossingSetupCard";
 import {
+    chickenGame,
     Difficulty,
     getDifficultyFinishLane,
     getDifficultyMaxSafeLanes,
     getChickenMultiplier,
     resolveMaxSafeLanes,
 } from "./chickenGameConfig";
-
-interface ChickenCrossingProps {
-    game: Game;
-}
 
 type RoundOutcome = "crash" | "cashout" | "finish";
 type CrashCause = "vehicle" | "trap";
@@ -81,7 +78,8 @@ const makeRandomGameId = (): bigint => {
     return BigInt(bytesToHex(new Uint8Array(randomBytes(32))));
 };
 
-const ChickenCrossing: React.FC<ChickenCrossingProps> = ({ game }) => {
+const ChickenCrossing: React.FC = () => {
+    const game = chickenGame;
     const router = useRouter();
     const searchParams = useSearchParams();
     const replayIdString = searchParams.get("id");
@@ -808,12 +806,12 @@ const ChickenCrossing: React.FC<ChickenCrossingProps> = ({ game }) => {
         setCurrentLane(0);
         setCrashed(false);
         setCashedOut(false);
-            setIsJumping(false);
-            setPendingTrapLane(null);
-            setPendingCrashCause(null);
-            setPendingUnsafeVehicleStrikeLane(null);
-            setCrashCause(null);
-            setPayout(null);
+        setIsJumping(false);
+        setPendingTrapLane(null);
+        setPendingCrashCause(null);
+        setPendingUnsafeVehicleStrikeLane(null);
+        setCrashCause(null);
+        setPayout(null);
 
         let lane = 0;
         const targetLane = lastRound.finalLane;
@@ -916,26 +914,19 @@ const ChickenCrossing: React.FC<ChickenCrossingProps> = ({ game }) => {
                     currentMultiplier={currentMultiplier}
                     isJumping={isJumping}
                     inReplayMode={isRewatching}
-                     walletBalance={walletBalance}
-                     isGamePaused={false}
-                     minBet={minBet}
-                     maxBet={maxBet}
-                     difficultyMaxSafeLanes={difficultyMaxSafeLanes}
-                     finishLane={difficultyFinishLane}
-                     autoJumpEnabled={autoJumpEnabled}
-                     onToggleAutoJump={toggleAutoJumpEnabled}
-                     musicMuted={musicMuted}
-                     sfxMuted={sfxMuted}
-                     onToggleMusicMuted={toggleMusicMuted}
-                     onToggleSfxMuted={toggleSfxMuted}
-                 />
-            </div>
-
-            <div className="mt-12 lg:mt-16">
-                <div className="mb-2 flex items-center gap-2">
-                    <Gamepad2 className="h-6 w-6 md:h-8 md:w-8" />
-                    <p className="text-xl font-medium sm:text-2xl">{game.title} History</p>
-                </div>
+                    walletBalance={walletBalance}
+                    isGamePaused={false}
+                    minBet={minBet}
+                    maxBet={maxBet}
+                    difficultyMaxSafeLanes={difficultyMaxSafeLanes}
+                    finishLane={difficultyFinishLane}
+                    autoJumpEnabled={autoJumpEnabled}
+                    onToggleAutoJump={toggleAutoJumpEnabled}
+                    musicMuted={musicMuted}
+                    sfxMuted={sfxMuted}
+                    onToggleMusicMuted={toggleMusicMuted}
+                    onToggleSfxMuted={toggleSfxMuted}
+                />
             </div>
         </div>
     );

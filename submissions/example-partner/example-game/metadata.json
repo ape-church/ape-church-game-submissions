@@ -1,0 +1,26 @@
+{
+  "team": "example-partner",
+  "gameName": "example-game",
+  "displayTitle": "Example Game",
+  "description": "This is an example game. Enter a description here - three sentences max.",
+  "authors": [
+    {
+      "name": "Example Partner",
+      "email": "example@example.com"
+    }
+  ],
+  "status": "pending",
+  "category": "arcade",
+  "tags": [
+    "arcade",
+    "example",
+    "game"
+  ],
+  "thumbnail": "/example-game/card.png",
+  "banner": "/example-game/banner.png",
+  "mainComponent": "ExampleGame.tsx",
+  "windowComponent": "ExampleGameWindow.tsx",
+  "setupComponent": "ExampleGameSetupCard.tsx",
+  "configFile": "exampleGameConfig.ts",
+  "version": "1.0.0"
+}
