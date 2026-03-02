@@ -4,7 +4,12 @@ import { getAllGameMetadata } from '@/lib/getGameMetadata'
 import StatusBadge from '@/components/shared/StatusBadge'
 
 export default async function Page() {
-  const games = await getAllGameMetadata()
+  const allGames = await getAllGameMetadata()
+  const games = [...allGames].sort((a, b) => {
+    const dateA = a.submittedAt ? new Date(a.submittedAt).getTime() : 0
+    const dateB = b.submittedAt ? new Date(b.submittedAt).getTime() : 0
+    return dateB - dateA
+  })
 
   return (
     <main>
