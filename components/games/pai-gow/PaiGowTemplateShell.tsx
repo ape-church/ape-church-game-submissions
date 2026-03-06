@@ -55,7 +55,10 @@ export default function PaiGowTemplateShell() {
         // Pai Gow has its own UI soundscape; keep template music off.
         disableBuiltInSong={true}
       >
-        <PaiGowTable ref={tableRef} onStatusChange={onStatusChange} />
+        {/* GameWindow renders a background image; mount Pai Gow UI as an overlay on top of it. */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 10 }}>
+          <PaiGowTable ref={tableRef} onStatusChange={onStatusChange} />
+        </div>
       </GameWindow>
     </div>
   );
