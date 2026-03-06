@@ -117,6 +117,23 @@ type PaiGowTableProps = {
   desktopSidebarHostId?: string;
 };
 
+function CardSlot({ filled = false }: { filled?: boolean }) {
+  return (
+    <div
+      aria-hidden
+      style={{
+        width: "var(--cardW, 72px)",
+        height: "var(--cardH, 100px)",
+        borderRadius: 14,
+        border: filled ? "1px solid rgba(0,0,0,0)" : "1px solid rgba(215,225,230,0.18)",
+        background: filled ? "transparent" : "rgba(0,0,0,0.18)",
+        boxShadow: filled ? "none" : "inset 0 1px 0 rgba(255,255,255,0.06)",
+      }}
+    />
+  );
+}
+
+
 const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function PaiGowTable(
   { onStatusChange, hideHeader = false, desktopSidebarHostId },
   ref,
@@ -1023,7 +1040,14 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
           ) : null}
 
           <div className="felt" style={desktopLayout ? ({ gridColumn: 1, marginTop: 0 } as React.CSSProperties) : undefined}>
-          <div className="zone dealerZone">
+          <div
+            className="zone dealerZone"
+            style={
+              desktopLayout
+                ? ({ minHeight: 220, display: "flex", flexDirection: "column" } as React.CSSProperties)
+                : undefined
+            }
+          >
             <div className="zoneHeader">
               <div className="zoneLabel">DEALER</div>
               <div style={{ fontSize: 12, opacity: 0.72 }}>
@@ -1063,7 +1087,14 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
             )}
           </div>
 
-          <div className="zone playerZone">
+          <div
+            className="zone playerZone"
+            style={
+              desktopLayout
+                ? ({ minHeight: 360, display: "flex", flexDirection: "column" } as React.CSSProperties)
+                : undefined
+            }
+          >
             <div className="zoneHeader">
               <div className="zoneLabel">PLAYER</div>
               <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
@@ -1113,6 +1144,9 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
                       {lowIdx.map((i) => (
                         <CardFace key={i} card={view.player7[i]} tone="low" onClick={() => removeFromLow(i)} />
                       ))}
+                      {Array.from({ length: Math.max(0, 2 - lowIdx.length) }).map((_, k) => (
+                        <CardSlot key={`low-slot-${k}`} />
+                      ))}
                     </div>
                   </div>
                   <div>
@@ -1120,6 +1154,9 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
                     <div className="cardsRow">
                       {highIdx.map((i) => (
                         <CardFace key={i} card={view.player7[i]} tone="high" onClick={() => removeFromHigh(i)} />
+                      ))}
+                      {Array.from({ length: Math.max(0, 5 - highIdx.length) }).map((_, k) => (
+                        <CardSlot key={`high-slot-${k}`} />
                       ))}
                     </div>
                   </div>
@@ -1149,6 +1186,9 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
                       {lowIdx.map((i) => (
                         <CardFace key={i} card={view.player7[i]} tone="low" onClick={() => removeFromLow(i)} />
                       ))}
+                      {Array.from({ length: Math.max(0, 2 - lowIdx.length) }).map((_, k) => (
+                        <CardSlot key={`m-low-slot-${k}`} />
+                      ))}
                     </div>
                   </div>
                   <div>
@@ -1156,6 +1196,9 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
                     <div className="cardsRow">
                       {highIdx.map((i) => (
                         <CardFace key={i} card={view.player7[i]} tone="high" onClick={() => removeFromHigh(i)} />
+                      ))}
+                      {Array.from({ length: Math.max(0, 5 - highIdx.length) }).map((_, k) => (
+                        <CardSlot key={`m-high-slot-${k}`} />
                       ))}
                     </div>
                   </div>
