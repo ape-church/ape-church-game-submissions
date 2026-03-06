@@ -182,6 +182,24 @@
   overflow: hidden;
 }
 
+/* Add subtle art back into dealer/player zones (provided assets) */
+.dealerZone{
+  background-image: url('/submissions/pai-gow/dealer-zone-bg.jpg');
+  background-size: cover;
+  background-position: 50% 40%;
+  background-repeat: no-repeat;
+  background-color: rgba(0,0,0,0.35);
+}
+
+.playerZone{
+  background-image: url('/submissions/pai-gow/player-zone-bg.jpg');
+  background-size: cover;
+  background-position: 50% 35%;
+  background-repeat: no-repeat;
+  background-color: rgba(0,0,0,0.35);
+}
+
+
 /* Desktop: give BETS its own bordered panel like RESULT */
 .betZone{
   margin-top: 14px;
@@ -407,7 +425,7 @@
   /* Put controls into the empty banner area on the top-right (like the screenshot callout) */
   position: absolute;
   right: 16px;
-  top: 62%;
+  top: 40%;
   transform: translateY(-50%);
 }
 

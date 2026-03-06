@@ -37,7 +37,8 @@ function cardImageName(rank: string, suit: string) {
   // Asset pack uses: 2-9, T, J, Q, K, A + suit letters C/D/H/S
   const r = rank === 'T' ? 'T' : rank
   const s = suit
-  return `${r}${s}.png`.toUpperCase()
+  const base = `${r}${s}`.toUpperCase()
+  return `${base}.png`
 }
 
 export function CardFace({ card, onClick, tone = 'neutral', faceDown = false, title }: Props) {
