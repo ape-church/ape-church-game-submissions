@@ -775,8 +775,23 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
           </div>
         </div>
 
-        <div className="betLane">
-          <button className="betSpot betSpotBonus" onClick={placeSideChip} disabled={betsLocked} title="Place Bonus bet">
+        <div className="betLane" style={{ position: "relative" }}>
+          <div
+            className="betSpot betSpotBonus"
+            role="button"
+            tabIndex={betsLocked ? -1 : 0}
+            aria-disabled={betsLocked}
+            title="Place Bonus bet"
+            onClick={betsLocked ? undefined : placeSideChip}
+            onKeyDown={(e) => {
+              if (betsLocked) return;
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                placeSideChip();
+              }
+            }}
+            style={{ cursor: betsLocked ? "not-allowed" : "pointer" }}
+          >
             <div className="chipStack" aria-hidden>
               {sideChips.slice(0, 22).map((v, i) => {
                 const w = wobbleStyle(v, i);
@@ -817,9 +832,24 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
               <div className="betName">BONUS</div>
               <div className="betValue" style={{ marginTop: 6, fontWeight: 900 }}>{side}</div>
             </div>
-          </button>
+          </div>
 
-          <button className="betSpot betSpotPush" onClick={placePushChip} disabled={betsLocked} title="Place Push Ace High bet">
+          <div
+            className="betSpot betSpotPush"
+            role="button"
+            tabIndex={betsLocked ? -1 : 0}
+            aria-disabled={betsLocked}
+            title="Place Push Ace High bet"
+            onClick={betsLocked ? undefined : placePushChip}
+            onKeyDown={(e) => {
+              if (betsLocked) return;
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                placePushChip();
+              }
+            }}
+            style={{ cursor: betsLocked ? "not-allowed" : "pointer" }}
+          >
             <div className="chipStack" aria-hidden>
               {pushChips.slice(0, 22).map((v, i) => {
                 const w = wobbleStyle(v, i);
@@ -860,9 +890,24 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
               <div className="betName">PUSH</div>
               <div className="betValue" style={{ marginTop: 6, fontWeight: 900 }}>{push}</div>
             </div>
-          </button>
+          </div>
 
-          <button className="betSpot betSpotMain" onClick={placeMainChip} disabled={betsLocked} title="Place Main bet">
+          <div
+            className="betSpot betSpotMain"
+            role="button"
+            tabIndex={betsLocked ? -1 : 0}
+            aria-disabled={betsLocked}
+            title="Place Main bet"
+            onClick={betsLocked ? undefined : placeMainChip}
+            onKeyDown={(e) => {
+              if (betsLocked) return;
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                placeMainChip();
+              }
+            }}
+            style={{ cursor: betsLocked ? "not-allowed" : "pointer" }}
+          >
             <div className="chipStack" aria-hidden>
               {mainChips.slice(0, 22).map((v, i) => {
                 const w = wobbleStyle(v, i);
@@ -899,43 +944,11 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
               </button>
             ) : null}
 
-            {/* Mobile convenience: clear all bets at once (before Play). Place near MAIN bet. */}
-            {!desktopLayout ? (
-              <button
-                type="button"
-                className="btn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  if (betsLocked) return;
-                  setMain(0);
-                  setSide(0);
-                  setPush(0);
-                  setMainChips([]);
-                  setSideChips([]);
-                  setPushChips([]);
-                }}
-                disabled={betsLocked || (mainChips.length === 0 && sideChips.length === 0 && pushChips.length === 0)}
-                title="Clear all bets"
-                style={{
-                  position: "absolute",
-                  right: -140,
-                  bottom: 10,
-                  padding: "8px 10px",
-                  borderRadius: 12,
-                  zIndex: 6,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Clear bets
-              </button>
-            ) : null}
-
             <div className="betContent">
               <div className="betName">MAIN</div>
               <div className="betValue" style={{ marginTop: 6, fontWeight: 900, fontSize: 18 }}>{main}</div>
             </div>
-          </button>
+          </div>
         </div>
 
         <div className="betFooterRow" style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginTop: 10 }}>
@@ -960,6 +973,162 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
 
   return (
     <div className="tableWrap">
+      {/* Inject Pai Gow CSS locally (cannot touch app/globals.css in submissions repo). */}
+      <style>{`
+:root{
+  --felt: radial-gradient(1200px 700px at 18% 0%, rgba(140,255,0,0.10), transparent 60%),
+          radial-gradient(900px 600px at 82% 20%, rgba(105,174,251,0.10), transparent 55%),
+          radial-gradient(900px 700px at 50% 120%, rgba(239,185,11,0.08), transparent 55%),
+          #050505;
+
+  /* responsive tokens */
+  --cardW: 72px;
+  --cardH: 100px;
+}
+
+.tableWrap{
+  min-height: 100%;
+  height: 100%;
+  background: transparent;
+  color: var(--text);
+}
+
+.pgLayout{
+  display: block;
+  height: 100%;
+}
+
+@media (min-width: 700px){
+  .table{ max-width: 100%; width: 100%; padding: 14px; }
+  .pgLayout{
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .felt{
+    grid-column: 1;
+    margin-top: 0;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    max-height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .pgSidebar{
+    grid-column: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 22px;
+    border: 1px solid rgba(215,225,230,0.12);
+    background: rgba(0,0,0,0.35);
+    box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+  }
+
+  .rail{
+    margin-top: 0;
+    flex: 0 0 38%;
+    min-height: 220px;
+    background-position: 55% 46%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .betZone{
+    margin-top: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    background: transparent;
+  }
+
+  .controls .btn{
+    padding: 12px 18px;
+    font-size: 15px;
+    border-radius: 14px;
+  }
+
+  .betLane{
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: stretch;
+    padding-top: 14px;
+  }
+
+  .betSpot,
+  .betSpotMain,
+  .betSpotBonus,
+  .betSpotPush{
+    width: 100% !important;
+    height: 92px;
+  }
+
+  .betSpotMain{ height: 104px; }
+}
+
+.table{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 18px 26px;
+}
+
+.felt{
+  margin-top: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(215,225,230,0.12);
+  background: rgba(0,0,0,0.35);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+  overflow: hidden;
+}
+
+.rail{
+  position: relative;
+  overflow: hidden;
+  padding: 18px 16px;
+  min-height: 280px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  row-gap: 10px;
+  align-items: start;
+  border-radius: 22px;
+  border: 1px solid rgba(215,225,230,0.12);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+  background-image: url('/submissions/pai-gow/header-bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 65% 42%;
+  background-color: rgba(0,0,0,0.10);
+}
+
+.rail::before{ content: none; }
+.rail > *{ position: relative; z-index: 1; }
+.brand{ display:flex; align-items:center; gap: 12px; }
+.title{ font-weight: 900; letter-spacing: 0.2px; }
+.sub{ font-size: 12px; opacity: 0.72; }
+
+.btn{
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(215,225,230,0.18);
+  background: rgba(20,20,20,0.80);
+  color: rgba(255,255,255,0.92);
+  font-weight: 800;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+.btn:disabled{ opacity: 0.55; cursor: not-allowed; }
+      `}</style>
+
       <div className={hideHeader ? "table tableNoRail" : "table"}>
         <div
           className="pgLayout"
