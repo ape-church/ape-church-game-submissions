@@ -48,9 +48,12 @@ export default function PaiGowTemplateShell() {
         so the bottom doesn't have a huge dead area (leave room for audio buttons).
       */}
       <style>{`
-        .pgWindowWrap{ height: min(860px, calc(100vh - 220px)); display:flex; }
-        /* GameWindow root is the first child div; force it to respect our wrapper height */
-        .pgWindowWrap > div{ height: 100%; }
+        /* Desktop-only: constrain the whole GameWindow so the perimeter box isn't excessively tall */
+        @media (min-width: 700px){
+          .pgWindowWrap{ height: min(820px, calc(100vh - 180px)); display:flex; }
+          /* GameWindow root is the first child div; force it to respect our wrapper height */
+          .pgWindowWrap > div{ height: 100%; }
+        }
       `}</style>
       <div className="pgWindowWrap">
       <GameWindow
