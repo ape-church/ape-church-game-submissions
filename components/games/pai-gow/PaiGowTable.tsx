@@ -1167,9 +1167,9 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-              <div style={{ fontWeight: 900, opacity: 0.85, letterSpacing: 0.6, fontSize: 12 }}>YOUR SPLIT</div>
+              <div style={{ fontWeight: 950, opacity: 1, letterSpacing: 0.8, fontSize: 13, color: "rgba(255,255,255,0.95)", textShadow: "0 1px 0 rgba(0,0,0,0.75)" }}>YOUR SPLIT</div>
               <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                <div style={{ fontSize: 12, opacity: 0.75 }}>Assign to:</div>
+                <div style={{ fontSize: 12, opacity: 1, color: "rgba(255,255,255,0.85)", textShadow: "0 1px 0 rgba(0,0,0,0.75)" }}>Assign to:</div>
                 <button className="btn" onClick={setTargetLow} disabled={!canSplit}>Low (2)</button>
                 <button className="btn" onClick={setTargetHigh} disabled={!canSplit}>High (5)</button>
               </div>
@@ -1180,7 +1180,7 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
               <div style={{ display: "grid", gridTemplateColumns: "1fr 260px", gap: 10, marginTop: 6, alignItems: "start" }}>
                 <div style={{ display: "grid", gap: 10 }}>
                   <div>
-                    <div style={{ fontWeight: 900, opacity: 0.85, letterSpacing: 0.6, fontSize: 12, marginBottom: 4 }}>LOW (2)</div>
+                    <div style={{ fontWeight: 950, opacity: 1, letterSpacing: 0.8, fontSize: 13, marginBottom: 4, color: "rgba(255,255,255,0.95)", textShadow: "0 1px 0 rgba(0,0,0,0.75)" }}>LOW (2)</div>
                     <div className="cardsRow">
                       {lowIdx.map((i) => (
                         <CardFace key={i} card={view.player7[i]} tone="low" onClick={() => removeFromLow(i)} />
@@ -1222,7 +1222,7 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
               <>
                 <div style={{ display: "grid", gap: 10, marginTop: 10 }}>
                   <div>
-                    <div style={{ fontWeight: 900, opacity: 0.85, letterSpacing: 0.6, fontSize: 12, marginBottom: 4 }}>LOW (2)</div>
+                    <div style={{ fontWeight: 950, opacity: 1, letterSpacing: 0.8, fontSize: 13, marginBottom: 4, color: "rgba(255,255,255,0.95)", textShadow: "0 1px 0 rgba(0,0,0,0.75)" }}>LOW (2)</div>
                     <div className="cardsRow">
                       {lowIdx.map((i) => (
                         <CardFace key={i} card={view.player7[i]} tone="low" onClick={() => removeFromLow(i)} />
@@ -1233,7 +1233,7 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontWeight: 900, opacity: 0.85, letterSpacing: 0.6, fontSize: 12, marginBottom: 4 }}>HIGH (5)</div>
+                    <div style={{ fontWeight: 950, opacity: 1, letterSpacing: 0.8, fontSize: 13, marginBottom: 4, color: "rgba(255,255,255,0.95)", textShadow: "0 1px 0 rgba(0,0,0,0.75)" }}>HIGH (5)</div>
                     <div className="cardsRow">
                       {highIdx.map((i) => (
                         <CardFace key={i} card={view.player7[i]} tone="high" onClick={() => removeFromHigh(i)} />

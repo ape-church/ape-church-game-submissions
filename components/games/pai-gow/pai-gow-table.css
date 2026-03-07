@@ -272,12 +272,18 @@
   margin-bottom: 10px;
 }
 
+/* Make secondary labels (YOUR SPLIT, LOW/HIGH labels, Assign to) closer to white */
+.felt :is(div,span){
+  color: inherit;
+}
+
 .zoneLabel{
-  font-weight: 950;
-  letter-spacing: 1px;
-  font-size: 14px;
-  opacity: 0.92;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.65);
+  font-weight: 1000;
+  letter-spacing: 1.2px;
+  font-size: 16px;
+  opacity: 1;
+  color: #ffffff;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.75);
 }
 
 .cardsRow{
