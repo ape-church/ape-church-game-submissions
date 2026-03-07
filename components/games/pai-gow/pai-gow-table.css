@@ -27,6 +27,9 @@
   /* Desktop: smaller cards so split + result always fit in the fixed GameWindow square */
   :root{ --cardW: 56px; --cardH: 78px; }
 
+  /* Reserve status line height so the header doesn't reflow when text changes. */
+  .dealerStatus{ min-height: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
   /* Prevent vertical growth from card wrapping on desktop (wrapping causes the table to "drop") */
   .cardsRow{ flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
   .cardsRowScroll{ flex-wrap: nowrap; overflow-x: auto; }

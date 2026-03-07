@@ -1074,7 +1074,7 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
           >
             <div className="zoneHeader">
               <div className="zoneLabel">DEALER</div>
-              <div style={{ fontSize: 12, opacity: 0.72 }}>
+              <div className="dealerStatus" style={{ fontSize: 12, opacity: 0.72 }}>
                 {!dealerRevealed
                   ? "Waiting"
                   : !dealerArranged
@@ -1087,9 +1087,16 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
             <div style={{ display: "grid", gridTemplateRows: "auto auto", gap: 8, flex: 1, minHeight: 0 }}>
               {/* HIGH row */}
               <div>
-                {dealerArranged ? (
-                  <div style={{ fontWeight: 900, opacity: 0.75, letterSpacing: 0.6, fontSize: 12, marginBottom: 4 }}>HIGH (5)</div>
-                ) : null}
+                {/* Reserve label height even before arranged (prevents subtle drop). */}
+                <div
+                  style={
+                    dealerArranged
+                      ? { fontWeight: 900, opacity: 0.75, letterSpacing: 0.6, fontSize: 12, marginBottom: 4 }
+                      : ({ fontWeight: 900, opacity: 0.75, letterSpacing: 0.6, fontSize: 12, marginBottom: 4, visibility: "hidden" } as React.CSSProperties)
+                  }
+                >
+                  HIGH (5)
+                </div>
 
                 {/* Before arranged: show the 7-card rack in the HIGH row (clean start view). */}
                 <div className="cardsRow cardsRowScroll">
