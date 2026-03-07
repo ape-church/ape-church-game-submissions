@@ -153,9 +153,20 @@
 
 
 .table{
-  max-width: 1200px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 8px 8px 10px;
+}
+
+/* Never allow the embedded game to overflow the GameWindow horizontally (fixes iPhone right-edge clipping). */
+.rail,
+.felt,
+.betZone{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .felt{
@@ -554,8 +565,8 @@
     gap: 10px;
     flex-wrap: wrap;
     /* Mobile: give the header art a bit more vertical room + bias the crop upward */
-    min-height: 192px;
-    background-position: 55% 10%;
+    min-height: 220px;
+    background-position: 55% 0%;
   }
 
   .brand{
