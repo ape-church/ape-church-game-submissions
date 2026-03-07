@@ -642,6 +642,16 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
     });
   }
 
+  function clearBets() {
+    if (betsLocked) return;
+    setMain(0);
+    setSide(0);
+    setPush(0);
+    setMainChips([]);
+    setSideChips([]);
+    setPushChips([]);
+  }
+
   const r = view.res;
   const mainPayout = r?.mainPayout ?? 0;
   const bonusPayout = r?.sidePayout ?? 0;
@@ -734,7 +744,14 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
                     : "Place bet"}
             </button>
 
-            {/* Change bet removed (betting UI is already visible in setup; after results use modal reset). */}
+            <button
+              className="btn"
+              onClick={clearBets}
+              disabled={betsLocked || (!mainChips.length && !sideChips.length && !pushChips.length)}
+              title={betsLocked ? "Bets are locked" : "Remove all bets"}
+            >
+              Clear bets
+            </button>
           </div>
         </div>
       ) : null}
