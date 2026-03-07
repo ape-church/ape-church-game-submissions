@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import GameWindow from "@/components/shared/GameWindow";
 import { paiGow } from "./paiGowConfig";
@@ -10,6 +10,8 @@ import PaiGowTable, { type PaiGowTableHandle, type PaiGowTableStatus } from "./P
 // behave consistently on the submissions preview site.
 export default function PaiGowTemplateShell() {
   const tableRef = useRef<PaiGowTableHandle | null>(null);
+  const gameWrapRef = useRef<HTMLDivElement | null>(null);
+  const sidebarHostRef = useRef<HTMLDivElement | null>(null);
   const [status, setStatus] = useState<PaiGowTableStatus | null>(null);
   const [gameId, setGameId] = useState<bigint>(() => BigInt(Date.now()));
 
@@ -40,11 +42,41 @@ export default function PaiGowTemplateShell() {
 
   const format = (n: number | undefined) => (Number.isFinite(n as number) ? String(n) : "0");
 
+  // Desktop: match the right sidebar panel height to the left GameWindow height.
+  // (Flex/grid stretching uses the tallest child; our sidebar content can be taller than GameWindow,
+  // so we pin the sidebar host height to the GameWindow and let the bets panel scroll internally.)
+  useEffect(() => {
+    const gameEl = gameWrapRef.current;
+    const sideEl = sidebarHostRef.current;
+    if (!gameEl || !sideEl) return;
+
+    const apply = () => {
+      // Only do this on desktop layouts.
+      if (window.innerWidth < 1024) {
+        sideEl.style.height = "";
+        return;
+      }
+      const h = gameEl.getBoundingClientRect().height;
+      if (h > 0) sideEl.style.height = `${Math.round(h)}px`;
+    };
+
+    apply();
+
+    const ro = new ResizeObserver(() => apply());
+    ro.observe(gameEl);
+    window.addEventListener("resize", apply);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", apply);
+    };
+  }, []);
+
   return (
     <div className="pgShell">
       {/* Match the platform template: GameWindow on the left, setup/bets panel on the right (desktop). */}
-      <div className="flex flex-col lg:flex-row lg:items-stretch gap-4 sm:gap-8 lg:gap-10">
-        <div className="flex-1 min-w-0">
+      <div className="flex flex-col lg:flex-row lg:items-start gap-4 sm:gap-8 lg:gap-10">
+        <div ref={gameWrapRef} className="flex-1 min-w-0">
           <GameWindow
             game={paiGow}
             isLoading={!!status?.isLoading}
@@ -214,8 +246,9 @@ export default function PaiGowTemplateShell() {
 
         {/* Setup/Bets panel (right). Desktop gets portal content; mobile ignores this and uses the in-table layout. */}
         <div
+          ref={sidebarHostRef}
           id="pgSidebarHost"
-          className="w-full lg:w-[380px] self-stretch rounded-[12px] border-[2.25px] sm:border-[3.75px] lg:border-[4.68px] border-[#2A3640] overflow-hidden"
+          className="w-full lg:w-[380px] rounded-[12px] border-[2.25px] sm:border-[3.75px] lg:border-[4.68px] border-[#2A3640] overflow-hidden"
         />
       </div>
     </div>
