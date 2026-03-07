@@ -31,6 +31,15 @@
   .cardsRow{ flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
   .cardsRowScroll{ flex-wrap: nowrap; overflow-x: auto; }
 
+  /* In flex-column zones, prevent card rows from shrinking and getting clipped */
+  .dealerZone .cardsRowScroll,
+  .playerZone .cardsRowScroll{
+    flex: 0 0 auto;
+    min-height: calc(var(--cardH) + 14px);
+    padding-bottom: 6px;
+    box-sizing: border-box;
+  }
+
   /* Keep zones from forcing the felt taller than the GameWindow square */
   .felt{ min-height: 0; display:flex; flex-direction: column; }
   .dealerZone{ flex: 0 0 38%; min-height: 0; }
