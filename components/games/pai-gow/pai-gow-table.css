@@ -564,13 +564,13 @@
     align-items: flex-start;
     gap: 10px;
     flex-wrap: wrap;
-    /* Mobile: use the original header art (desktop version crops wrong on iPhone). */
+    /* Mobile (Telegram iPhone): use the original header art + crop higher so the top copy is visible. */
     background-image: url('/submissions/pai-gow/header-bg-mobile.jpg');
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: 50% 20%;
+    background-position: 50% 6%;
 
-    min-height: 176px;
+    min-height: 190px;
   }
 
   .brand{
