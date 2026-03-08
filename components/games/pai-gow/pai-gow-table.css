@@ -17,16 +17,7 @@
   color: var(--text);
 }
 
-/* Mobile: allow scrolling inside the main square so BETS/chips are reachable.
-   Desktop stays locked: this rule never applies there. */
-@media (max-width: 640px){
-  .tableWrap{
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 64px; /* keep content clear of audio buttons */
-  }
-}
+/* Mobile: no inner scroll. We make the GameWindow taller on mobile instead. */
 
 .pgLayout{
   display: block;
@@ -544,6 +535,25 @@
     gap: 10px;
     flex-wrap: wrap;
     min-height: 148px;
+  }
+
+  /* Mobile: always use the OLD header art (Telegram iPhone). */
+  @media (max-width: 520px){
+    .rail{
+      background-image: url('/submissions/pai-gow/header-bg-mobile.jpg') !important;
+      background-size: cover !important;
+      background-repeat: no-repeat !important;
+      background-position: 50% 18% !important;
+      min-height: 176px;
+    }
+
+    /* Prevent any horizontal drift */
+    .tableWrap, .table, .rail, .felt, .betZone{
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .tableWrap{ overflow-x: hidden; }
   }
 
   .brand{
