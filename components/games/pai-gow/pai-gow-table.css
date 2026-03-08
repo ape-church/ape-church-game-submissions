@@ -600,6 +600,9 @@
 
     /* Force the inner table itself to obey the wrapper width (it was expanding to content width) */
     .table{
+      /* Tailwind's `.table` utility sets display: table which can size-to-content.
+         Force block so it respects the wrapper width on iOS/TG. */
+      display: block !important;
       width: 100% !important;
       max-width: 100% !important;
       overflow-x: hidden;
