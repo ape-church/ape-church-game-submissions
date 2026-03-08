@@ -723,7 +723,12 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
             <img src={acLogo} alt="ApeChurch" style={{ height: 26, opacity: 0.95 }} />
             <div>
               <div className="title">Pai Gow</div>
-              <div className="sub">{"dealer flips →\narranges →\nplayer flips →\nsplit"}</div>
+              <div className="sub" aria-label="How to play">
+                <span className="subStep">dealer flips →</span>
+                <span className="subStep">arranges →</span>
+                <span className="subStep">player flips →</span>
+                <span className="subStep">split</span>
+              </div>
             </div>
           </div>
           <div className="controls" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -1068,7 +1073,12 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
                 <img src={acLogo} alt="ApeChurch" style={{ height: 26, opacity: 0.95 }} />
                 <div>
                   <div className="title">Pai Gow</div>
-                  <div className="sub">{"dealer flips →\narranges →\nplayer flips →\nsplit"}</div>
+                  <div className="sub" aria-label="How to play">
+                    <span className="subStep">dealer flips →</span>
+                    <span className="subStep">arranges →</span>
+                    <span className="subStep">player flips →</span>
+                    <span className="subStep">split</span>
+                  </div>
                 </div>
               </div>
               <div className="controls" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>

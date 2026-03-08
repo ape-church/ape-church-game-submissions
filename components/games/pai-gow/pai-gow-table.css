@@ -589,14 +589,26 @@
       white-space: nowrap;
     }
 
-    /* Step lines under the title (each phrase stays on its own line) */
+    /* Step list under the title (each phrase on its own line with a bullet) */
     .brand .sub{
       margin-top: 2px;
       font-size: 12px;
       opacity: 0.78;
-      white-space: pre-line; /* respect \n */
       max-width: 250px;
       line-height: 1.15;
+    }
+
+    .brand .subStep{
+      display: block;
+      position: relative;
+      padding-left: 14px;
+    }
+    .brand .subStep::before{
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0.9;
     }
 
     .controls{
