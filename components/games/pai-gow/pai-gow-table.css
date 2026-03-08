@@ -715,67 +715,9 @@
   }
 }
 
-@media (max-width: 520px){
-  :root{
-    /* Slightly larger so facedown cards don't look tiny; still fits 7 across on iPhone. */
-    --cardW: 48px;
-    --cardH: 66px;
-  }
-
-  /* iPhone (Telegram): lock header to OLD art + stable crop */
-  .rail{
-    background-image: url('/submissions/pai-gow/header-bg-mobile.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 50% 18%;
-    min-height: 176px;
-  }
-
-  /* iPhone: prevent any horizontal drift */
-  .tableWrap, .table, .rail, .felt, .betZone{
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-  .tableWrap{ overflow-x: hidden; }
-
-  /* chip footer: keep everything visible + stop right-edge clipping */
-  .betFooterRow{
-    justify-content: flex-start !important;
-    gap: 10px;
-  }
-
-  /* keep jackpot on its own line, left-aligned (prevents cut-off) */
-  .jackpotPill{
-    display: inline-flex;
-    margin-left: 0;
-    margin-top: 8px;
-    order: 3;
-  }
-
-  /* keep card rows on one line with horizontal swipe */
-  .cardsRow{
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 8px;
-    padding-right: 12px; /* so last card isn't tight to the edge */
-    gap: 6px;
-  }
-
-  /* Mobile: make chip stacks smaller so they don't cover BONUS text/value */
-  .chipStack{
-    left: 6px;
-    width: 46px;
-    height: 120px; /* let stacks grow upward without clipping */
-  }
-
-  .stackChip{
-    width: 34px;
-    height: 34px;
-    font-size: 12px;
-  }
+/* NOTE: legacy iPhone overrides removed.
+   Mobile iPhone behavior is controlled by the nested @media (max-width: 520px) block inside the 820px section above.
+   This prevents conflicting header sizing/cropping rules. */
 
   .betSpotBonus .betContent{
     padding-left: 76px;

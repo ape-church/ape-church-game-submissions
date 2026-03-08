@@ -60,18 +60,18 @@ export default function PaiGowTemplateShell() {
         gameEl.querySelector<HTMLElement>(".chipRack") ??
         gameEl.querySelector<HTMLElement>(".betLane");
 
-      const wrapTop = tableWrap.getBoundingClientRect().top;
-      const anchorBottom = anchor ? Math.ceil(anchor.getBoundingClientRect().bottom - wrapTop) : 0;
+      // Use offset-based math (more stable than getBoundingClientRect in iOS in-app browsers).
+      const anchorBottom = anchor ? Math.ceil(anchor.offsetTop + anchor.offsetHeight) : 0;
       const scrollH = Math.ceil(tableWrap.scrollHeight);
 
       const scrollerPad = 64; // matches pgMobileScroller paddingBottom
-      const chromePad = 6; // minimal breathing room so the border clears the volume buttons
+      const chromePad = 4; // minimal breathing room so the border clears the volume buttons
 
       // Keep a single scroll (no inner scrollbar): never undershoot the actual scrollHeight.
-      // But also keep the window tight to the chip rack so we don't leave a big dead zone.
+      // Keep the window tight to the chip rack.
       const target = Math.min(
-        1750,
-        Math.max(1100, Math.max(anchorBottom + scrollerPad + chromePad, scrollH + scrollerPad + 6)),
+        1900,
+        Math.max(1100, Math.max(anchorBottom + scrollerPad + chromePad, scrollH + scrollerPad + 2)),
       );
       setMobileGwHeight(`${target}px`);
     };
