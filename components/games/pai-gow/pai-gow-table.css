@@ -17,6 +17,17 @@
   color: var(--text);
 }
 
+/* Mobile: allow scrolling inside the main square so BETS/chips are reachable.
+   Desktop stays locked: this rule never applies there. */
+@media (max-width: 640px){
+  .tableWrap{
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 64px; /* keep content clear of audio buttons */
+  }
+}
+
 .pgLayout{
   display: block;
   height: 100%;
