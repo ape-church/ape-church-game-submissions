@@ -40,6 +40,37 @@ export default function PaiGowTemplateShell() {
   const showResults = !!status?.isGameFinished;
   const breakdown = status?.breakdown;
 
+  // Mobile: dynamically size the GameWindow so it fits the content (avoid big empty space / double scroll).
+  const [mobileGwHeight, setMobileGwHeight] = useState<string>("1700px");
+  useEffect(() => {
+    const gameEl = gameWrapRef.current;
+    if (!gameEl) return;
+
+    const apply = () => {
+      if (typeof window === "undefined") return;
+      if (window.innerWidth > 640) return; // mobile-only
+
+      const tableWrap = gameEl.querySelector<HTMLElement>(".tableWrap");
+      if (!tableWrap) return;
+
+      // scrollHeight includes all table content; add a little breathing room for the audio buttons.
+      const contentH = Math.ceil(tableWrap.scrollHeight);
+      const target = Math.min(1900, Math.max(1200, contentH + 90));
+      setMobileGwHeight(`${target}px`);
+    };
+
+    apply();
+    const ro = new ResizeObserver(() => apply());
+    // Observe the whole game area; content changes will bubble into layout changes here.
+    ro.observe(gameEl);
+    window.addEventListener("resize", apply);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", apply);
+    };
+  }, [status?.isGameFinished, status?.betAmount, status?.payout]);
+
   const format = (n: number | undefined) => (Number.isFinite(n as number) ? String(n) : "0");
 
   // Desktop: match the right sidebar panel height to the left GameWindow height.
@@ -81,7 +112,7 @@ export default function PaiGowTemplateShell() {
             game={paiGow}
             isLoading={!!status?.isLoading}
             isGameFinished={showResults}
-            customHeightMobile="1700px"
+            customHeightMobile={mobileGwHeight}
             betAmount={betAmount}
             payout={payout}
             inReplayMode={false}
