@@ -64,7 +64,7 @@ export default function PaiGowTemplateShell() {
       const anchorBottom = anchor ? Math.ceil(anchor.getBoundingClientRect().bottom - wrapTop) : Math.ceil(tableWrap.scrollHeight);
 
       // Add a little breathing room for the audio buttons and rounded border.
-      const target = Math.min(1750, Math.max(1100, anchorBottom + 110));
+      const target = Math.min(1750, Math.max(1100, anchorBottom + 70));
       setMobileGwHeight(`${target}px`);
     };
 
