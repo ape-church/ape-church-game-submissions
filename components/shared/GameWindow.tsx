@@ -133,7 +133,7 @@ const GameWindow: React.FC<GameWindowProps> = ({
         <div
             data-gw-mobile-height={customHeightMobile ? "true" : "false"}
             className={cn(
-                "lg:basis-2/3 w-full rounded-[12px] border-[2.25px] sm:border-[3.75px] lg:border-[4.68px] border-[#2A3640] relative overflow-hidden",
+                "lg:basis-2/3 w-full rounded-[12px] border-[2.25px] sm:border-[3.75px] lg:border-[4.68px] border-[#2A3640] relative overflow-hidden bg-black",
             )}
             style={customHeightMobile ? ({ ["--gwMobileMinH" as any]: customHeightMobile } as React.CSSProperties) : undefined}
         >
