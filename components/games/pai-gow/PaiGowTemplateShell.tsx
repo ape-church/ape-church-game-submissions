@@ -61,7 +61,20 @@ export default function PaiGowTemplateShell() {
         gameEl.querySelector<HTMLElement>(".betLane");
 
       // Use offset-based math (more stable than getBoundingClientRect in iOS in-app browsers).
-      const anchorBottom = anchor ? Math.ceil(anchor.offsetTop + anchor.offsetHeight) : 0;
+      // Compute anchorBottom relative to tableWrap (offsetTop alone is relative to offsetParent).
+      let anchorBottom = 0;
+      if (anchor) {
+        let y = 0;
+        let el: HTMLElement | null = anchor;
+        while (el && el !== tableWrap) {
+          y += el.offsetTop;
+          el = el.offsetParent as HTMLElement | null;
+        }
+        // If the offsetParent chain didn't reach tableWrap, fall back to plain offsetTop.
+        if (el !== tableWrap) y = anchor.offsetTop;
+        anchorBottom = Math.ceil(y + anchor.offsetHeight);
+      }
+
       const scrollH = Math.ceil(tableWrap.scrollHeight);
 
       const scrollerPad = 64; // matches pgMobileScroller paddingBottom
