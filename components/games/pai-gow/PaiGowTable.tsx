@@ -952,6 +952,17 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
             </div>
           </div>
 
+          {/* Mobile: use the extra grid slot under PUSH for a Clear bets button */}
+          <button
+            type="button"
+            className="betClearBtn"
+            onClick={clearBets}
+            disabled={betsLocked || (!mainChips.length && !sideChips.length && !pushChips.length)}
+            title={betsLocked ? "Bets are locked" : "Remove all bets"}
+          >
+            Clear bets
+          </button>
+
           <div
             className="betSpot betSpotMain"
             role="button"
