@@ -88,6 +88,7 @@ const GameResultsModal: React.FC<GameResultsModalProps> = ({
     // Respect user's minimize preference - don't force it to expand if they want it minimized
     useEffect(() => {
         if (isOpen && !hasAnimatedIn) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setHasAnimatedIn(true);
             // Don't force setMinimizeResultsModal(false) - respect the user's preference
             // If they minimized it before, it should stay minimized for subsequent games
@@ -97,6 +98,7 @@ const GameResultsModal: React.FC<GameResultsModalProps> = ({
     // Reset animation state when modal closes
     useEffect(() => {
         if (!isOpen) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setHasAnimatedIn(false);
         }
     }, [isOpen]);

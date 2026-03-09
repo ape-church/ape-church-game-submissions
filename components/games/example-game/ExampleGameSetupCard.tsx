@@ -40,11 +40,11 @@ interface ExampleGameSetupCardProps {
     jackpotMultiplier: number;
     inReplayMode: boolean;
 
-    account?: any;
+    account?: { address: string };
     walletBalance: number;
     playerAddress?: string;
     isGamePaused?: boolean;
-    profile?: any;
+    profile?: unknown;
     minBet: number;
     maxBet: number;
 }

@@ -120,11 +120,13 @@ const GameWindow: React.FC<GameWindowProps> = ({
             const id = window.setTimeout(() => setShowResults(true), resultModalDelayMs);
             return () => window.clearTimeout(id);
         }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setShowResults(isGameFinished);
     }, [isGameFinished, resultModalDelayMs]);
 
     useEffect(() => {
         if (!isGameFinished) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setShowResults(false);
         }
     }, [isGameFinished]);
@@ -135,7 +137,11 @@ const GameWindow: React.FC<GameWindowProps> = ({
             className={cn(
                 "lg:basis-2/3 w-full rounded-[12px] border-[2.25px] sm:border-[3.75px] lg:border-[4.68px] border-[#2A3640] relative overflow-hidden bg-black",
             )}
-            style={customHeightMobile ? ({ ["--gwMobileMinH" as any]: customHeightMobile } as React.CSSProperties) : undefined}
+            style={
+                customHeightMobile
+                    ? ({ ["--gwMobileMinH" as string]: customHeightMobile } as React.CSSProperties)
+                    : undefined
+            }
         >
             {customHeightMobile ? (
                 <style>{`@media (max-width: 640px){ [data-gw-mobile-height="true"]{ min-height: var(--gwMobileMinH); } }`}</style>
