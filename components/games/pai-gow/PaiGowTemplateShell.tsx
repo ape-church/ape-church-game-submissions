@@ -177,12 +177,12 @@ export default function PaiGowTemplateShell() {
       const scrollerPad = 44; // matches pgMobileScroller paddingBottom
       const chromePad = 4; // minimal breathing room so the border clears the volume buttons
 
-      // Keep a single scroll (no inner scrollbar): never undershoot the actual scrollHeight.
-      // Keep the window tight to the chip rack.
-      const target = Math.min(
-        1900,
-        Math.max(1100, Math.max(anchorBottom + scrollerPad + chromePad, scrollH + scrollerPad + 2)),
-      );
+      // Prefer anchoring to the chip rack bottom; scrollHeight can include extra "fill" space.
+      // Only fall back to scrollHeight if we couldn't find an anchor.
+      const anchorTarget = anchorBottom > 0 ? anchorBottom + scrollerPad + chromePad : 0;
+      const fallbackTarget = scrollH + scrollerPad + 2;
+
+      const target = Math.min(1900, Math.max(1100, anchorTarget || fallbackTarget));
       setMobileGwHeight(`${target}px`);
     };
 
