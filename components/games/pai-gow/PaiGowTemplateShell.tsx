@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { Howl, Howler } from "howler";
 
 import GameWindow from "@/components/shared/GameWindow";
 import { paiGow } from "./paiGowConfig";
@@ -15,9 +17,86 @@ export default function PaiGowTemplateShell() {
   const [status, setStatus] = useState<PaiGowTableStatus | null>(null);
   const [gameId, setGameId] = useState<bigint>(() => BigInt(Date.now()));
 
+  // Audio: Pai Gow custom music + win/lose stingers.
+  const [muteMusic, setMuteMusic] = useState(false);
+  const [muteSfx, setMuteSfx] = useState(false);
+  const [audioArmed, setAudioArmed] = useState(false); // set true on first user gesture
+
+  const bgMusicRef = useRef<Howl | null>(null);
+  const winSfxRef = useRef<Howl | null>(null);
+  const loseSfxRef = useRef<Howl | null>(null);
+
+  const armAudio = useCallback(() => {
+    // Mobile browsers require a user gesture to unlock audio.
+    setAudioArmed(true);
+
+    try {
+      // Howler may not have ctx in some environments; guard it.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ctx = (Howler as any).ctx as AudioContext | undefined;
+      ctx?.resume?.();
+    } catch {
+      // ignore
+    }
+
+    const bg = bgMusicRef.current;
+    if (bg && !muteMusic) {
+      // Start immediately on gesture (unlocks playback reliably on iOS/in-app browsers)
+      if (!bg.playing()) bg.play();
+    }
+  }, [muteMusic]);
+
   const onStatusChange = useCallback((s: PaiGowTableStatus) => {
     setStatus(s);
   }, []);
+
+  const audioPaths = useMemo(
+    () => ({
+      bg: "/submissions/pai-gow/audio/PaiGow-Instrumental.mp3",
+      win: "/submissions/pai-gow/audio/Win.mp3",
+      lose: "/submissions/pai-gow/audio/Loose.wav",
+    }),
+    [],
+  );
+
+  // Init audio objects once.
+  useEffect(() => {
+    const bg = new Howl({ src: [audioPaths.bg], loop: true, volume: 0.45, preload: true });
+    const win = new Howl({ src: [audioPaths.win], volume: 0.85, preload: true });
+    const lose = new Howl({ src: [audioPaths.lose], volume: 0.85, preload: true });
+
+    bgMusicRef.current = bg;
+    winSfxRef.current = win;
+    loseSfxRef.current = lose;
+
+    return () => {
+      bg.unload();
+      win.unload();
+      lose.unload();
+      bgMusicRef.current = null;
+      winSfxRef.current = null;
+      loseSfxRef.current = null;
+    };
+  }, [audioPaths.bg, audioPaths.win, audioPaths.lose]);
+
+  // Apply mute states.
+  useEffect(() => {
+    bgMusicRef.current?.mute(muteMusic);
+  }, [muteMusic]);
+
+  // Start/stop background music based on user gesture + mute.
+  useEffect(() => {
+    const bg = bgMusicRef.current;
+    if (!bg) return;
+
+    if (!audioArmed || muteMusic) {
+      // Don't force-stop if unarmed; but pausing keeps it clean.
+      if (bg.playing()) bg.pause();
+      return;
+    }
+
+    if (!bg.playing()) bg.play();
+  }, [audioArmed, muteMusic]);
 
   const onReset = useCallback(() => {
     tableRef.current?.reset();
@@ -39,6 +118,24 @@ export default function PaiGowTemplateShell() {
 
   const showResults = !!status?.isGameFinished;
   const breakdown = status?.breakdown;
+
+  // Play win/lose stinger once when results appear.
+  const prevShowResultsRef = useRef(false);
+  useEffect(() => {
+    const prev = prevShowResultsRef.current;
+    prevShowResultsRef.current = showResults;
+
+    if (!showResults || prev) return;
+    if (!audioArmed || muteSfx) return;
+
+    // Determine outcome by net vs wager.
+    if (payout > betAmount) {
+      winSfxRef.current?.play();
+    } else if (payout < betAmount) {
+      loseSfxRef.current?.play();
+    }
+    // Push/tie -> no stinger.
+  }, [showResults, payout, betAmount, audioArmed, muteSfx]);
 
   // Mobile: dynamically size the GameWindow so it fits the content (avoid big empty space / double scroll).
   const [mobileGwHeight, setMobileGwHeight] = useState<string>("1700px");
@@ -245,6 +342,8 @@ export default function PaiGowTemplateShell() {
             onRewatch={onRewatch}
             currentGameId={gameId}
             disableBuiltInSong={true}
+            onMusicMutedChange={setMuteMusic}
+            onSfxMutedChange={setMuteSfx}
             resultModalDelayMs={900}
           >
             {/* GameWindow renders a background image; mount Pai Gow UI as an overlay on top of it. */}
@@ -253,6 +352,8 @@ export default function PaiGowTemplateShell() {
                 ref={tableRef}
                 onStatusChange={onStatusChange}
                 desktopSidebarHostId="pgSidebarHost"
+                muteSfx={muteSfx}
+                onUserGesture={armAudio}
               />
             </div>
 

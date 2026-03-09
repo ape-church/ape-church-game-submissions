@@ -4,8 +4,10 @@
 //   C:\Users\echom\Desktop\PaiGow\ape-gow\ui\src\App.tsx
 // Goal: keep gameplay identical; only adjust imports/paths for Next.js template.
 
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+
+import { Howl } from "howler";
 
 import { paiGowCss } from "./paiGowStyles";
 
@@ -115,6 +117,12 @@ type PaiGowTableProps = {
   hideHeader?: boolean;
   /** On desktop, render the banner + betting UI into this element (template SetupCard). */
   desktopSidebarHostId?: string;
+
+  /** Mute toggle from GameWindow (SFX button). */
+  muteSfx?: boolean;
+
+  /** Called on a user gesture so the shell can safely start background audio on mobile browsers. */
+  onUserGesture?: () => void;
 };
 
 function CardSlot({ filled = false, visible = true }: { filled?: boolean; visible?: boolean }) {
@@ -137,10 +145,40 @@ function CardSlot({ filled = false, visible = true }: { filled?: boolean; visibl
 
 
 const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function PaiGowTable(
-  { onStatusChange, hideHeader = false, desktopSidebarHostId },
+  { onStatusChange, hideHeader = false, desktopSidebarHostId, muteSfx = false, onUserGesture },
   ref,
 ) {
   const [seed, setSeed] = useState("demo-seed-1"); // deterministic per hand
+
+  // Audio (SFX)
+  const flipSfxRef = useRef<Howl | null>(null);
+  useEffect(() => {
+    // NOTE: use absolute /public path (Next.js-safe)
+    const s = new Howl({
+      src: ["/submissions/pai-gow/audio/flipcard.wav"],
+      volume: 0.75,
+      preload: true,
+    });
+    flipSfxRef.current = s;
+
+    return () => {
+      s.unload();
+      flipSfxRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const s = flipSfxRef.current;
+    if (!s) return;
+    s.mute(!!muteSfx);
+  }, [muteSfx]);
+
+  const playFlipSfx = useCallback(() => {
+    const s = flipSfxRef.current;
+    if (!s || muteSfx) return;
+    // allow overlap for dealer 7-card flip sequence
+    s.play();
+  }, [muteSfx]);
 
   // ApeChurch lifecycle: 0 setup → 1 ongoing → 2 game over
   const [, setCurrentView] = useState<0 | 1 | 2>(0);
@@ -413,6 +451,7 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
 
   async function playGame() {
     // Start a new game with current bet (simulated tx)
+    onUserGesture?.();
     setIsGameFinished(false);
     if (dealerRevealed) return;
 
@@ -430,10 +469,13 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
   }
 
   function clickPool(i: number) {
+    onUserGesture?.();
+
     // Before split-stage: clicks flip cards (player reveal flow)
     if (!dealerRevealed) return;
 
     if (!playerFlipped[i]) {
+      playFlipSfx();
       const next = [...playerFlipped];
       next[i] = true;
       setPlayerFlipped(next);
@@ -489,6 +531,7 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
 
     for (let i = 0; i < 7; i++) {
       window.setTimeout(() => {
+        playFlipSfx();
         setDealerFlipped((prev) => {
           const next = [...prev];
           next[i] = true;
@@ -504,9 +547,13 @@ const PaiGowTable = forwardRef<PaiGowTableHandle, PaiGowTableProps>(function Pai
   }
 
   const flipAllPlayer = useCallback(() => {
+    onUserGesture?.();
     if (!dealerArranged) return;
+
+    // One flip sound for the bulk reveal (avoid 7 rapid-fire overlaps)
+    playFlipSfx();
     setPlayerFlipped(Array(7).fill(true));
-  }, [dealerArranged]);
+  }, [dealerArranged, playFlipSfx, onUserGesture]);
 
   const autoSplitHouseWay = useCallback(() => {
     if (!canSplit) return;
