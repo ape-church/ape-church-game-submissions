@@ -23,9 +23,6 @@ type GameWindowProps = {
     showPNL: boolean;
     isGamePaused?: boolean;
 
-    /** Optional extra content injected into the results modal (keeps animation/style consistent). */
-    resultsExtraContent?: React.ReactNode;
-
     onReset: () => void;
     onPlayAgain?: () => void;
     playAgainText?: string;
@@ -54,9 +51,6 @@ const GameWindow: React.FC<GameWindowProps> = ({
     isUserOriginalPlayer = false,
     showPNL = false,
     isGamePaused = false,
-
-    resultsExtraContent,
-
     onReset,
     onPlayAgain,
     playAgainText = "Play Again",
@@ -180,8 +174,7 @@ const GameWindow: React.FC<GameWindowProps> = ({
                         apePrice={1}
                         isLoading={isLoading}
                         gameTitle={game.title}
-                        extraContent={resultsExtraContent}
-                        onReset={onReset}
+onReset={onReset}
                         onPlayAgain={onPlayAgain}
                         playAgainButtonText={playAgainText}
                         onRewatch={onRewatch}
