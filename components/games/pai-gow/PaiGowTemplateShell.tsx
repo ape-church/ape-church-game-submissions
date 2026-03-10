@@ -175,14 +175,10 @@ export default function PaiGowTemplateShell() {
       const scrollH = Math.ceil(tableWrap.scrollHeight);
 
       const scrollerPad = 44; // matches pgMobileScroller paddingBottom
-      const chromePad = 4; // minimal breathing room so the border clears the volume buttons
 
-      // Prefer anchoring to the chip rack bottom; scrollHeight can include extra "fill" space.
-      // Only fall back to scrollHeight if we couldn't find an anchor.
-      const anchorTarget = anchorBottom > 0 ? anchorBottom + scrollerPad + chromePad : 0;
-      const fallbackTarget = scrollH + scrollerPad + 2;
-
-      const target = Math.min(1900, Math.max(1100, anchorTarget || fallbackTarget));
+      // IMPORTANT: to avoid nested scrolling on mobile in in-app browsers,
+      // make the GameWindow tall enough for the full content.
+      const target = Math.min(2400, Math.max(1200, scrollH + scrollerPad + 2));
       setMobileGwHeight(`${target}px`);
     };
 
