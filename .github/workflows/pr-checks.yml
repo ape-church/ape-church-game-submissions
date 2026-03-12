@@ -211,6 +211,33 @@ jobs:
             fi
           fi
 
+          # revenueShare must be a non-empty array, addresses must be valid, shares must sum to 100
+          RS_COUNT=$(jq '.revenueShare | if type == "array" then length else 0 end' "$METADATA")
+          if [ "$RS_COUNT" -eq 0 ]; then
+            echo "::error::revenueShare must be a non-empty array"
+            FAIL=1
+          else
+            BAD_ENTRIES=$(jq '[.revenueShare[] | select(.name == null or .name == "" or .address == null or .address == "" or .share == null)] | length' "$METADATA")
+            if [ "$BAD_ENTRIES" -gt 0 ]; then
+              echo "::error::Every revenueShare entry must have a non-empty \"name\", \"address\", and \"share\""
+              FAIL=1
+            fi
+
+            BAD_ADDRS=$(jq -r '[.revenueShare[].address] | map(select(test("^0x[0-9a-fA-F]{40}$") | not)) | length' "$METADATA")
+            if [ "$BAD_ADDRS" -gt 0 ]; then
+              echo "::error::Every revenueShare address must be a valid 42-character hex address (0x + 40 hex chars)"
+              FAIL=1
+            fi
+
+            TOTAL_SHARE=$(jq '[.revenueShare[].share] | add' "$METADATA")
+            if [ "$TOTAL_SHARE" != "100" ]; then
+              echo "::error::revenueShare shares must sum to 100 but got $TOTAL_SHARE"
+              FAIL=1
+            else
+              echo "✓ revenueShare ($RS_COUNT entries, shares sum to 100)"
+            fi
+          fi
+
           if [ "$FAIL" -eq 1 ]; then exit 1; fi
           echo ""
           echo "metadata.json is valid."

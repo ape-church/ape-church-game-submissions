@@ -105,7 +105,9 @@ Your `metadata.json` was copied over from the template in the previous step. Ope
 - `team` and `gameName` match your folder names exactly
 - `submittedAt` is updated to today's date in `YYYY-MM-DD` format
 - `status` is `"pending"` — do not change this
-
+- `revenueShare` is filled out with correct names, telegram usernames, and ERC-20 addresses
+- All `share` values add up to exactly 100
+- `address` must be a valid ERC-20 address to receive Ape Coin — double-check this carefully, payments are sent to this address automatically
 ---
 
 ### Step 5 — Open a Pull Request
