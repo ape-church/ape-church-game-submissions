@@ -1,0 +1,35 @@
+{
+  "team": "apechurch",
+  "gameName": "my-game",
+  "displayTitle": "Look Punch",
+  "description": "A street-arcade punch challenge built for the Ape Church platform. Players choose a buy-in and a target threshold from 1 to 99, then watch the cabinet reveal a random power score. Clear the threshold to cash the multiplier.",
+  "authors": [
+    {
+      "name": "XLR",
+      "telegram": "cryptoxlr"
+    }
+  ],
+  "revenueShare": [
+    {
+      "name": "LOOK",
+      "telegram": "cryptoxlr",
+      "address": "0xfb32731dfa1ad598D93EfceEAdC4A21DD7589365",
+      "share": 100
+    }
+  ],
+  "status": "pending",
+  "category": "arcade",
+  "tags": [
+    "arcade",
+    "boxing",
+    "punch-machine"
+  ],
+  "thumbnail": "/my-game/card.png",
+  "banner": "/my-game/banner.png",
+  "mainComponent": "MyGame.tsx",
+  "windowComponent": "MyGameWindow.tsx",
+  "setupComponent": "MyGameSetupCard.tsx",
+  "configFile": "myGameConfig.ts",
+  "version": "1.0.0",
+  "submittedAt": "2026-03-06"
+}
