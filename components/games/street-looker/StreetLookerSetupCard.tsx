@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { CircleHelp } from "lucide-react";
 import BetAmountInput from "@/components/shared/BetAmountInput";
 import { CustomSlider } from "@/components/shared/CustomSlider";
 import {
@@ -12,7 +13,8 @@ import {
   ResolvedPunchRound,
   THRESHOLD_PRESETS,
 } from "./streetLookerGameConfig";
-import { Card } from "../ui/card";
+import { Card } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface MyGameSetupCardProps {
   currentView: 0 | 1 | 2;
@@ -29,6 +31,34 @@ interface MyGameSetupCardProps {
   onPlayAgain: () => void;
   onRewatch: () => void;
 }
+
+interface StatTooltipProps {
+  label: string;
+  content: React.ReactNode;
+}
+
+const StatTooltip: React.FC<StatTooltipProps> = ({ label, content }) => (
+  <div className="flex items-center gap-1.5 text-[0.58rem] uppercase tracking-[0.08em] text-[rgba(255,218,184,0.58)]">
+    <span className="leading-none">{label}</span>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          aria-label={`Explain ${label.toLowerCase()}`}
+          className="inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full text-[#ffcf8f]/60 transition-colors hover:text-[#ffdca9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff9f5a]/70"
+        >
+          <CircleHelp className="h-3 w-3" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent
+        side="top"
+        className="max-w-[220px] rounded-[10px] border border-[#6a473a] bg-[#1e1518]/95 px-3 py-2 text-[11px] leading-relaxed text-[#fff1d6] shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
+      >
+        {content}
+      </TooltipContent>
+    </Tooltip>
+  </div>
+);
 
 const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
   currentView,
@@ -48,6 +78,7 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
   const [usdMode, setUsdMode] = useState(false);
   const predictedMultiplier = getMultiplierForThreshold(threshold);
   const estimatedPayout = getPayoutForRound(betAmount, threshold);
+  const estimatedJackpotMultiplier = predictedMultiplier + 2.5;
   const winChance = getWinChanceForThreshold(threshold) * 100;
 
   return (
@@ -84,11 +115,10 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
             type="button"
             onClick={() => onThresholdChange(preset)}
             disabled={isLoading || currentView === 1}
-            className={`rounded-[8px] border px-2 py-2 text-xs font-semibold transition-colors ${
-              threshold === preset
+            className={`rounded-[8px] border px-2 py-2 text-xs font-semibold transition-colors ${threshold === preset
                 ? "border-[#ff9f5a] bg-[#ef4f34] text-white"
                 : "border-[#5d4339] bg-white/5 text-[#f6dec0] hover:bg-white/10"
-            } disabled:cursor-not-allowed disabled:opacity-50`}
+              } disabled:cursor-not-allowed disabled:opacity-50`}
           >
             {preset}
           </button>
@@ -98,19 +128,36 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
       <div className="punch-machine-grid">
         <div className="punch-machine-stat">
           <span>Payout multiplier</span>
-          <strong>{predictedMultiplier.toFixed(4)}x</strong>
+          <strong>{predictedMultiplier.toFixed(3)}x</strong>
         </div>
         <div className="punch-machine-stat">
-          <span>Projected payout</span>
-          <strong>{estimatedPayout.toFixed(3)} APE</strong>
+          <StatTooltip
+            label="Jackpot Multiplier"
+            content={
+              <>
+                Hitting exactly <strong>999</strong> adds an extra <strong>2.5x</strong> to
+                your payout. It happens roughly <strong>1 in 500</strong> rounds.
+              </>
+            }
+          />
+          <strong>{estimatedJackpotMultiplier.toFixed(3)}x</strong>
         </div>
         <div className="punch-machine-stat">
-          <span>Win chance</span>
+          <StatTooltip
+            label="Win chance"
+            content={
+              <>
+                Each round generates <strong>two</strong> random numbers and uses the{" "}
+                <strong>higher</strong> result. Your win chance is based on that boosted final
+                number, not a single roll.
+              </>
+            }
+          />
           <strong>{winChance.toFixed(2)}%</strong>
         </div>
         <div className="punch-machine-stat">
-          <span>Last payout</span>
-          <strong>{payout == null ? "--" : `${payout.toFixed(3)} APE`}</strong>
+          <span>Projected payout</span>
+          <strong>{estimatedPayout.toFixed(2)} APE</strong>
         </div>
       </div>
 
