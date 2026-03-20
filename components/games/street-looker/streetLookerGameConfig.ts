@@ -166,9 +166,9 @@ export const myGame: Game = {
   title: PUNCH_MACHINE_COPY.title,
   description: PUNCH_MACHINE_COPY.description,
   gameAddress: "0x1234567890123456789012345678901234567890",
-  gameBackground: "/my-game/background.png",
-  card: "/my-game/card.jpg",
-  banner: "/my-game/banner.jpg",
+  gameBackground: "/street-looker/background.jpg",
+  card: "/street-looker/card.jpg",
+  banner: "/street-looker/banner.jpg",
   themeColorBackground: MACHINE_THEME.accent,
   payouts: {
     0: {

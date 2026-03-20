@@ -1,8 +1,8 @@
 {
-  "team": "apechurch",
-  "gameName": "my-game",
-  "displayTitle": "Look Punch",
-  "description": "A street-arcade punch challenge built for the Ape Church platform. Players choose a buy-in and a target threshold from 1 to 99, then watch the cabinet reveal a random power score. Clear the threshold to cash the multiplier.",
+  "team": "look",
+  "gameName": "street-looker",
+  "displayTitle": "Street Looker",
+  "description": "A street-arcade punch challenge built for the Ape Church platform. Players choose a buy-in and a target threshold from 1 to 999, then watch the cabinet reveal a random power score. Clear the threshold to cash the multiplier.",
   "authors": [
     {
       "name": "XLR",
@@ -24,12 +24,12 @@
     "boxing",
     "punch-machine"
   ],
-  "thumbnail": "/my-game/card.png",
-  "banner": "/my-game/banner.png",
-  "mainComponent": "MyGame.tsx",
-  "windowComponent": "MyGameWindow.tsx",
-  "setupComponent": "MyGameSetupCard.tsx",
-  "configFile": "myGameConfig.ts",
+  "thumbnail": "/street-looker/card.jpg",
+  "banner": "/street-looker/banner.jpg",
+  "mainComponent": "StreetLooker.tsx",
+  "windowComponent": "StreetLookerWindow.tsx",
+  "setupComponent": "StreetLookerSetupCard.tsx",
+  "configFile": "streetLookerGameConfig.ts",
   "version": "1.0.0",
-  "submittedAt": "2026-03-06"
+  "submittedAt": "2026-03-19"
 }
