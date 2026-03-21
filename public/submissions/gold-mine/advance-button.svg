@@ -1,0 +1,51 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer glow/shadow -->
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <radialGradient id="buttonGradient" cx="50%" cy="40%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+    </radialGradient>
+    <radialGradient id="innerGradient" cx="50%" cy="40%">
+      <stop offset="0%" style="stop-color:#422006;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1c1917;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+
+  <!-- Outer ring with orange/gold gradient -->
+  <circle cx="512" cy="512" r="400" fill="url(#buttonGradient)" filter="url(#glow)"/>
+
+  <!-- Inner dark circle -->
+  <circle cx="512" cy="512" r="340" fill="url(#innerGradient)"/>
+
+  <!-- Inner orange ring -->
+  <circle cx="512" cy="512" r="340" fill="none" stroke="#f59e0b" stroke-width="8"/>
+
+  <!-- Decorative bolts/rivets in corners -->
+  <g fill="#1e293b" stroke="#475569" stroke-width="4">
+    <circle cx="320" cy="320" r="24"/>
+    <circle cx="704" cy="320" r="24"/>
+    <circle cx="320" cy="704" r="24"/>
+    <circle cx="704" cy="704" r="24"/>
+  </g>
+
+  <!-- "DIG" text -->
+  <text
+    x="512"
+    y="560"
+    font-family="Arial Black, sans-serif"
+    font-size="200"
+    font-weight="900"
+    fill="#fbbf24"
+    text-anchor="middle"
+    stroke="#92400e"
+    stroke-width="8"
+    paint-order="stroke"
+  >DIG</text>
+</svg>

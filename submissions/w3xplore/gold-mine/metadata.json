@@ -1,8 +1,8 @@
 {
   "team": "w3xplore",
-  "gameName": "crash-or-cash-out",
-  "displayTitle": "Crash or Cash Out",
-  "description": "Watch the multiplier climb and cash out before it crashes! The longer you wait, the higher the payout - but one wrong moment and you lose everything.",
+  "gameName": "gold-mine",
+  "displayTitle": "Gold Mine",
+  "description": "Dig to reveal hidden treasures in the 9x9 mine grid! Find gold nuggets to win, but watch out for dynamite - it destroys all gold in rows with 3+ gold pieces. Strike it rich with up to 100x multiplier!",
   "authors": [
     {
       "name": "w3xplore",
@@ -20,13 +20,13 @@
   "status": "pending",
   "category": "arcade",
   "tags": [
-    "crash",
+    "grid",
     "arcade",
-    "multiplier",
-    "risk"
+    "mining",
+    "treasure"
   ],
-  "thumbnail": "/submissions/crash-or-cash-out/card.png",
-  "banner": "/submissions/crash-or-cash-out/banner.png",
+  "thumbnail": "/submissions/gold-mine/card.png",
+  "banner": "/submissions/gold-mine/banner.png",
   "mainComponent": "MyGame.tsx",
   "windowComponent": "MyGameWindow.tsx",
   "setupComponent": "MyGameSetupCard.tsx",
