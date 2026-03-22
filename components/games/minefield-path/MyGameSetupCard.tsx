@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import {
     Card,
     CardContent,
@@ -13,9 +12,10 @@ import {
 } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Info } from "lucide-react";
+import { Info, LogOut } from "lucide-react";
 import { Game } from "@/lib/games";
 import BetAmountInput from "@/components/shared/BetAmountInput";
+import { STEP_MULTIPLIERS, TOTAL_STEPS } from "./minefieldLogic";
 
 interface MyGameSetupCardProps {
     game: Game;
@@ -32,17 +32,17 @@ interface MyGameSetupCardProps {
     isLoading: boolean;
     payout: number | null;
     inReplayMode: boolean;
+    currentMultiplier: number;
+    stepsDone: number;
+    isAlive: boolean;
 
-    account?: any;
+    account?: unknown;
     walletBalance: number;
     playerAddress?: string;
     isGamePaused?: boolean;
-    profile?: any;
+    profile?: unknown;
     minBet: number;
     maxBet: number;
-    isClimbing: boolean;
-    hasCashedOut: boolean;
-    currentMultiplier: number;
 }
 
 const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
@@ -59,32 +59,19 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
     isLoading,
     payout,
     inReplayMode,
-    account = undefined,
-    playerAddress = undefined,
+    currentMultiplier,
+    stepsDone,
+    isAlive,
     walletBalance,
     isGamePaused = false,
-    profile = undefined,
     maxBet,
-    minBet,
-    isClimbing,
-    hasCashedOut,
-    currentMultiplier,
 }) => {
     const themeColorBackground = game.themeColorBackground;
-
     const usdMode = false;
 
-    const getCurrentWalletAmount = (): number => {
-        return walletBalance;
-    };
-
-    const getCurrentWalletAmountMinusReduction = (): number => {
-        return walletBalance;
-    };
-
-    const getCurrentWalletAmountString = (): string => {
-        return `${walletBalance.toFixed(2)} APE`;
-    };
+    const getCurrentWalletAmount = (): number => walletBalance;
+    const getCurrentWalletAmountMinusReduction = (): number => walletBalance;
+    const getCurrentWalletAmountString = (): string => `${walletBalance.toFixed(2)} APE`;
 
     const getBetAmountText = (): string => {
         return `${(betAmount || 0).toLocaleString([], {
@@ -100,9 +87,16 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
         })} APE`;
     };
 
-    const getPotentialWinText = (): string => {
-        const potentialWin = betAmount * currentMultiplier;
-        return `${(potentialWin || 0).toLocaleString([], {
+    const getMaxPayoutString = (): string => {
+        return `${((betAmount || 0) * STEP_MULTIPLIERS[TOTAL_STEPS - 1]).toLocaleString([], {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 3,
+        })} APE`;
+    };
+
+    const getCashOutText = (): string => {
+        const amount = betAmount * currentMultiplier;
+        return `${amount.toLocaleString([], {
             minimumFractionDigits: 0,
             maximumFractionDigits: 3,
         })} APE`;
@@ -147,9 +141,15 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                         <p className="text-right">{getBetAmountText()}</p>
                     </div>
                     <div className="w-full flex justify-between items-center gap-2">
-                        <p>Potential Win</p>
-                        <p className={`text-right text-green-500 font-semibold`}>
-                            {getPotentialWinText()}
+                        <p>Current Multiplier</p>
+                        <p className={`text-right ${currentMultiplier > 0 ? "text-emerald-400" : ""}`}>
+                            {currentMultiplier > 0 ? `${currentMultiplier}x` : "—"}
+                        </p>
+                    </div>
+                    <div className="w-full flex justify-between items-center gap-2">
+                        <p>Total Payout</p>
+                        <p className={`text-right ${showGreenText ? "text-success" : ""}`}>
+                            {getTotalPayoutText()}
                         </p>
                     </div>
                 </div>
@@ -208,19 +208,6 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
         );
     };
 
-    const canReplay = (): boolean => {
-        if (!playerAddress) {
-            return false;
-        }
-        if (!account) {
-            return false;
-        }
-        if (inReplayMode) {
-            return false;
-        }
-        return playerAddress.toLowerCase() === account.address.toLowerCase();
-    };
-
     return (
         <Card className="lg:basis-1/3 p-6 flex flex-col">
             {currentView === 0 && (
@@ -247,10 +234,34 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                                 onChange={setBetAmount}
                                 balance={getCurrentWalletAmount()}
                                 usdMode={usdMode}
-                                setUsdMode={() => { }}
+                                setUsdMode={() => {}}
                                 disabled={isLoading}
                                 themeColorBackground={themeColorBackground}
                             />
+                        </div>
+
+                        <div className="mt-6 flex flex-col gap-2">
+                            <p className="text-xs font-semibold text-[#91989C] uppercase tracking-wider">
+                                Payout Range
+                            </p>
+                            <div className="grid grid-cols-4 gap-2">
+                                {[0, 12, 24, TOTAL_STEPS - 1].map((idx) => (
+                                    <div
+                                        key={idx}
+                                        className="flex flex-col items-center gap-1 py-2 px-1 rounded-lg bg-white/[0.04] border border-white/[0.08]"
+                                    >
+                                        <span className="text-[10px] font-mono text-white/40">
+                                            Step {idx + 1}
+                                        </span>
+                                        <span className="text-sm font-mono font-bold text-cyan-400">
+                                            {STEP_MULTIPLIERS[idx]}x
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="text-[10px] font-mono text-white/30 text-center">
+                                {TOTAL_STEPS} steps total — multiplier scales from {STEP_MULTIPLIERS[0]}x to {STEP_MULTIPLIERS[TOTAL_STEPS - 1]}x
+                            </p>
                         </div>
                     </CardContent>
 
@@ -260,21 +271,29 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                         <div className="w-full flex flex-col items-center gap-2 font-medium text-xs text-[#91989C]">
                             <div className="w-full flex justify-between items-center gap-2">
                                 <div className="flex items-center gap-2">
-                                    <p>Max Bet Per Game</p>
+                                    <p>Max Payout ({STEP_MULTIPLIERS[TOTAL_STEPS - 1]}x)</p>
                                     <TooltipProvider>
                                         <Tooltip>
                                             <TooltipTrigger>
                                                 <Info size={16} />
                                             </TooltipTrigger>
                                             <TooltipContent>
-                                                <p>Maximum amount you can bet per round</p>
+                                                <p>Clear all {TOTAL_STEPS} columns to earn {STEP_MULTIPLIERS[TOTAL_STEPS - 1]}x your bet</p>
                                             </TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
                                 </div>
+                                <p className="text-right">{getMaxPayoutString()}</p>
+                            </div>
+                            <div className="w-full flex justify-between items-center gap-2">
+                                <p>Max Bet Per Game</p>
                                 <p className="text-right">
                                     {maxBet.toLocaleString([], { maximumFractionDigits: 0 })} APE
                                 </p>
+                            </div>
+                            <div className="w-full flex justify-between items-center gap-2">
+                                <p>Mines Per Column</p>
+                                <p className="text-right">2</p>
                             </div>
                         </div>
 
@@ -296,25 +315,54 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                 <CardContent className="grow font-roboto flex flex-col-reverse lg:flex-col lg:justify-between gap-8">
                     {ShowInUsdAndStats(true)}
 
-                    <div className="flex lg:flex-col justify-center items-center">
-                        <div className="font-roboto flex flex-col items-center gap-3 w-full">
-                            <Button
-                                onClick={onCashOut}
-                                className="w-full text-lg font-bold py-6"
-                                style={{
-                                    backgroundColor: isClimbing ? "#22c55e" : "#6b7280",
-                                    borderColor: isClimbing ? "#22c55e" : "#6b7280",
-                                }}
-                                disabled={!isClimbing || hasCashedOut}
-                            >
-                                {hasCashedOut ? "Cashed Out!" : isClimbing ? "CASH OUT" : "Waiting..."}
-                            </Button>
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="w-full flex flex-col items-center gap-2">
+                            {isAlive && stepsDone > 0 && stepsDone < TOTAL_STEPS && (
+                                <>
+                                    <p className="text-xs text-[#91989C] font-mono">
+                                        Cash out now for {getCashOutText()}
+                                    </p>
+                                    <Button
+                                        onClick={onCashOut}
+                                        className="w-full gap-2"
+                                        style={{
+                                            backgroundColor: "#10b981",
+                                            borderColor: "#10b981",
+                                        }}
+                                    >
+                                        <LogOut className="w-4 h-4" />
+                                        Cash Out ({currentMultiplier}x)
+                                    </Button>
+                                </>
+                            )}
 
-                            {isClimbing && (
-                                <p className="text-sm text-center text-muted-foreground animate-pulse">
-                                    Click to cash out at {currentMultiplier.toFixed(2)}x
+                            {isAlive && stepsDone === 0 && (
+                                <p className="text-sm text-cyan-300/60 font-mono text-center">
+                                    Pick a tile in column 1 to begin
                                 </p>
                             )}
+
+                            {isAlive && stepsDone >= TOTAL_STEPS && (
+                                <p className="text-sm text-emerald-400 font-mono text-center font-bold">
+                                    You cleared the field!
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="w-full">
+                            <div className="flex justify-between items-center text-[10px] font-mono text-white/30 mb-1">
+                                <span>Progress</span>
+                                <span>{stepsDone}/{TOTAL_STEPS}</span>
+                            </div>
+                            <div className="w-full h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                                <div
+                                    className="h-full rounded-full transition-all duration-500 ease-out"
+                                    style={{
+                                        width: `${(stepsDone / TOTAL_STEPS) * 100}%`,
+                                        backgroundColor: isAlive ? "#10b981" : "#ef4444",
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </CardContent>

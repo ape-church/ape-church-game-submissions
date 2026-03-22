@@ -1,8 +1,8 @@
 {
   "team": "w3xplore",
-  "gameName": "crash-or-cash-out",
-  "displayTitle": "Crash or Cash Out",
-  "description": "Watch the multiplier climb and cash out before it crashes! The longer you wait, the higher the payout - but one wrong moment and you lose everything.",
+  "gameName": "minefield-path",
+  "displayTitle": "Minefield Path",
+  "description": "Navigate a 5x5 grid from left to right. Pick one tile per column and avoid the mines. Cash out anytime or push deeper for bigger payouts up to 12x.",
   "authors": [
     {
       "name": "w3xplore",
@@ -18,19 +18,18 @@
     }
   ],
   "status": "pending",
-  "category": "arcade",
+  "category": "strategy",
   "tags": [
-    "crash",
-    "arcade",
-    "multiplier",
+    "strategy",
+    "minefield",
     "risk"
   ],
-  "thumbnail": "/submissions/crash-or-cash-out/card.png",
-  "banner": "/submissions/crash-or-cash-out/banner.png",
+  "thumbnail": "/my-game/card.png",
+  "banner": "/my-game/banner.png",
   "mainComponent": "MyGame.tsx",
   "windowComponent": "MyGameWindow.tsx",
   "setupComponent": "MyGameSetupCard.tsx",
   "configFile": "myGameConfig.ts",
   "version": "1.0.0",
-  "submittedAt": "2026-03-21"
+  "submittedAt": "2026-03-22"
 }
