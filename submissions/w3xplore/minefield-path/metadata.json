@@ -24,8 +24,8 @@
     "minefield",
     "risk"
   ],
-  "thumbnail": "/my-game/card.png",
-  "banner": "/my-game/banner.png",
+  "thumbnail": "/minefield-path/card.png",
+  "banner": "/minefield-path/banner.png",
   "mainComponent": "MyGame.tsx",
   "windowComponent": "MyGameWindow.tsx",
   "setupComponent": "MyGameSetupCard.tsx",
