@@ -25,8 +25,8 @@
     "mining",
     "treasure"
   ],
-  "thumbnail": "/submissions/gold-mine/card.png",
-  "banner": "/submissions/gold-mine/banner.png",
+  "thumbnail": "gold-mine/card.png",
+  "banner": "/gold-mine/banner.png",
   "mainComponent": "MyGame.tsx",
   "windowComponent": "MyGameWindow.tsx",
   "setupComponent": "MyGameSetupCard.tsx",
