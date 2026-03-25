@@ -5,6 +5,7 @@ import ChickenCrossing from '@/components/games/chicken-crossing/ChickenCrossing
 import PaiGowGame from '@/components/games/pai-gow/PaiGowGame'
 import LootTumble from '@/components/games/loot-tumble/LootTumble'
 import StreetLooker from '@/components/games/street-looker/StreetLooker'
+import FoxyShooter from '@/components/games/foxy-shooter/FoxyShooter'
 
 const gameRegistry: Record<string, ComponentType> = {
   'example-game': ExampleGame,
