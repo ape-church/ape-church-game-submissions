@@ -24,7 +24,7 @@
     "axe",
     "roulette"
   ],
-  "thumbnail": "/submissions/axe-roulette/card.png",
+  "thumbnail": "/axe-roulette/card.png",
   "banner": "/axe-roulette/banner.png",
   "mainComponent": "AxeRoulette.tsx",
   "windowComponent": "AxeRouletteWindow.tsx",
