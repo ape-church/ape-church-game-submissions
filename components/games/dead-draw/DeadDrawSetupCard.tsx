@@ -15,7 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-react';
 import { Game } from '@/lib/games';
-import BetAmountInput from '../shared/BetAmountInput';
+import BetAmountInput from '@/components/shared/BetAmountInput';
 import { GameState, TOTAL_POSITIONS, SHERIFFS_PER_LAYER } from './engine/types';
 import { generatePayoutTable, generateShootPayoutTable, getFullClearMultiplierBps, bpsToDisplay } from './engine/multiplier';
 import { RevealSpeed } from './DeadDrawCard';
