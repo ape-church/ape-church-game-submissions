@@ -60,10 +60,10 @@ const AxeRouletteWindow: React.FC<AxeRouletteWindowProps> = ({
   muteSfx,
 }) => {
   const sfxOpts = { interrupt: true, soundEnabled: !muteSfx };
-  const [winSFX]     = useSound("/axe-roulette/sfx/win.mp3",          { ...sfxOpts, volume: 0.6 });
-  const [loseSFX]    = useSound("/axe-roulette/sfx/lose.mp3",         { ...sfxOpts, volume: 0.6 });
-  const [axeThrowSFX] = useSound("/axe-roulette/sfx/axe_throw.mp3",   { ...sfxOpts, volume: 0.8 });
-  const [gameEndSFX] = useSound("/axe-roulette/sfx/snd_game_end.mp3", { ...sfxOpts, volume: 0.7 });
+  const [winSFX]     = useSound("/submissions/axe-roulette/sfx/win.mp3",          { ...sfxOpts, volume: 0.6 });
+  const [loseSFX]    = useSound("/submissions/axe-roulette/sfx/lose.mp3",         { ...sfxOpts, volume: 0.6 });
+  const [axeThrowSFX] = useSound("/submissions/axe-roulette/sfx/axe_throw.mp3",   { ...sfxOpts, volume: 0.8 });
+  const [gameEndSFX] = useSound("/submissions/axe-roulette/sfx/snd_game_end.mp3", { ...sfxOpts, volume: 0.7 });
   const [axeFrame, setAxeFrame] = useState(1);
 
   useEffect(() => {
@@ -116,7 +116,7 @@ const AxeRouletteWindow: React.FC<AxeRouletteWindowProps> = ({
       <div className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/axe-roulette/forest-bg.png"
+          src="/submissions/axe-roulette/forest-bg.png"
           alt=""
           className="w-full h-full object-cover"
         />
@@ -158,7 +158,7 @@ const AxeRouletteWindow: React.FC<AxeRouletteWindowProps> = ({
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={i + 1}
-                src={`/axe-roulette/axe-sprites/axe${i + 1}.png`}
+                src={`/submissions/axe-roulette/axe-sprites/axe${i + 1}.png`}
                 alt=""
                 style={{
                   width: 250,

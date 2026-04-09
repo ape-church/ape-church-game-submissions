@@ -8,7 +8,7 @@ import AxeRouletteWindow, { SpinPhase } from "./AxeRouletteWindow";
 import AxeRouletteSetupCard from "./AxeRouletteSetupCard";
 import { bytesToHex, Hex } from "viem";
 import { toast } from "sonner";
-import { WHEEL_SLICES } from "./axeRouletteConfig";
+import { axeRouletteGame, WHEEL_SLICES } from "./axeRouletteConfig";
 
 // Animation timing (ms)
 const TX_DELAY      = 600;  // simulated transaction
@@ -17,11 +17,8 @@ const AXE_FLIGHT    = 330;  // axe travel duration (11 frames × 30ms)
 const HIT_DELAY     = AXE_THROW_AT + AXE_FLIGHT; // when wheel snaps + result is known
 const GAME_OVER_DELAY = 1800; // after result, transition to game-over view
 
-interface AxeRouletteComponentProps {
-  game: Game;
-}
-
-const AxeRouletteComponent: React.FC<AxeRouletteComponentProps> = ({ game }) => {
+const AxeRouletteComponent: React.FC = () => {
+  const game: Game = axeRouletteGame;
   const router = useRouter();
   const searchParams = useSearchParams();
   const replayIdString = searchParams.get("id");

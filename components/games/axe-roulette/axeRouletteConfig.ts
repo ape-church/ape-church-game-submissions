@@ -46,11 +46,11 @@ export const axeRouletteGame: Game = {
   description:
     "Pick your multiplier, place your bet, and throw the axe at the spinning wheel. The higher the multiplier, the lower the odds — but the bigger the reward.",
   gameAddress: "0x0000000000000000000000000000000000000000",
-  gameBackground: "/axe-roulette/pixel_forest_squarebg.png",
-  card: "/axe-roulette/card.png",
-  banner: "/axe-roulette/banner.png",
+  gameBackground: "/submissions/axe-roulette/pixel_forest_squarebg.png",
+  card: "/submissions/axe-roulette/card.png",
+  banner: "/submissions/axe-roulette/banner.png",
   advanceToNextStateAsset: undefined,
   themeColorBackground: "#8B1A1A",
-  song: "/axe-roulette/audio/song.mp3",
+  song: "/submissions/axe-roulette/audio/song.mp3",
   payouts: {},
 };
