@@ -5,7 +5,8 @@
   "description": "Can you help Foxy protect the goal? Predict where they will try and kick the ball, then roll the dice and try to defend the goal!",
   "authors": [
     {
-      "name": "Foxy Fam"
+      "name": "Foxy Fam",
+      "telegram": "CODENAME883"
     }
   ],
   "revenueShare": [
@@ -20,6 +21,7 @@
       "address": "0x68B1ccD2fc53925eFD90284Fa7Fee662c564cd19",
       "share": 75
     }
+  ],
   "status": "pending",
   "category": "arcade",
   "tags": [
