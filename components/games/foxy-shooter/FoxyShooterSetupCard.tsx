@@ -492,13 +492,13 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                             onClick={onRollDice}
                             className="w-full font-bold text-lg py-6"
                             style={{
-                                backgroundColor: (isRolling || animationPhase === "moving") ? "#316A8D" : "#38B6FF",
-                                borderColor: (isRolling || animationPhase === "moving") ? "#316A8D" : "#38B6FF",
+                                backgroundColor: (isRolling || animationPhase === "shooting") ? "#316A8D" : "#38B6FF",
+                                borderColor: (isRolling || animationPhase === "shooting") ? "#316A8D" : "#38B6FF",
                                 color: "#313131",
                             }}
-                            disabled={isRolling || animationPhase === "moving"}
+                            disabled={isRolling || animationPhase === "shooting"}
                         >
-                            {isRolling || animationPhase === "moving"
+                            {isRolling || animationPhase === "shooting"
                                 ? "Rolling..."
                                 : isMultiRollSession
                                     ? `Roll All ${numberOfRolls} Dice`
