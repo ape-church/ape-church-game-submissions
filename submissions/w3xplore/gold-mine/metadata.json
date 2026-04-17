@@ -1,0 +1,36 @@
+{
+  "team": "w3xplore",
+  "gameName": "gold-mine",
+  "displayTitle": "Gold Mine",
+  "description": "Dig to reveal hidden treasures in the 9x9 mine grid! Find gold nuggets to win, but watch out for dynamite - it destroys all gold in rows with 3+ gold pieces. Strike it rich with up to 100x multiplier!",
+  "authors": [
+    {
+      "name": "w3xplore",
+      "telegram": "skyarc01"
+    }
+  ],
+  "revenueShare": [
+    {
+      "name": "w3xplore",
+      "telegram": "skyarc01",
+      "address": "0x3Db21A7C9B20018F1d88b893D714BE45AB4A19A0",
+      "share": 100
+    }
+  ],
+  "status": "pending",
+  "category": "arcade",
+  "tags": [
+    "grid",
+    "arcade",
+    "mining",
+    "treasure"
+  ],
+  "thumbnail": "/gold-mine/card.png",
+  "banner": "/gold-mine/banner.png",
+  "mainComponent": "MyGame.tsx",
+  "windowComponent": "MyGameWindow.tsx",
+  "setupComponent": "MyGameSetupCard.tsx",
+  "configFile": "myGameConfig.ts",
+  "version": "1.0.0",
+  "submittedAt": "2026-03-21"
+}
