@@ -15,12 +15,14 @@ import {
     TOTAL_STEPS,
     GridTile,
 } from "./minefieldLogic";
+import { myGame } from "./myGameConfig";
 
 interface MyGameComponentProps {
-    game: Game;
+    game?: Game;
 }
 
 const MyGameComponent: React.FC<MyGameComponentProps> = ({ game }) => {
+    const gameData = game ?? myGame;
     const router = useRouter();
     const searchParams = useSearchParams();
     const replayIdString = searchParams.get("id");
@@ -269,12 +271,13 @@ const MyGameComponent: React.FC<MyGameComponentProps> = ({ game }) => {
 
     return (
         <div>
-            <div className="flex flex-col lg:flex-row gap-4 sm:gap-8 lg:gap-10">
+            <div className="flex flex-col gap-4 sm:gap-8 lg:flex-row lg:gap-10">
                 <GameWindow
-                    game={game}
+                    game={gameData}
                     currentGameId={currentGameId}
                     isLoading={isLoading}
                     isGameFinished={gameOver}
+                    customHeightMobile="min(100vw, 36rem)"
                     onPlayAgain={handlePlayAgain}
                     playAgainText={playAgainText}
                     onRewatch={handleRewatch}
@@ -288,14 +291,14 @@ const MyGameComponent: React.FC<MyGameComponentProps> = ({ game }) => {
                     resultModalDelayMs={1000}
                 >
                     <MyGameWindow
-                        game={game}
+                        game={gameData}
                         minefieldState={minefieldState}
                         onTileClick={handleTileClick}
                     />
                 </GameWindow>
 
                 <MyGameSetupCard
-                    game={game}
+                    game={gameData}
                     onPlay={async () => await playGame()}
                     onCashOut={handleCashOut}
                     onRewatch={handleRewatch}
