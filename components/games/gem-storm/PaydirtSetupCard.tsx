@@ -23,12 +23,6 @@ interface PaydirtSetupCardProps {
     lastWin: number;
     autoSpinsRemaining: number;
     onStartAutoSpin: (count: number) => void;
-    /** Dev/QA: play a pre-picked triggered seed (skips to bonus). */
-    onForceBonus: () => void;
-    /** Dev/QA: play a seed that triggers AND lands at least one chest. */
-    onForceChest: () => void;
-    /** Dev/QA: play a seed that triggers AND fills the full grid (Grand). */
-    onForceFullBoard: () => void;
     /** Spin speed preset. */
     speed: "slow" | "fast" | "turbo";
     onSetSpeed: (next: "slow" | "fast" | "turbo") => void;
@@ -50,9 +44,6 @@ export default function PaydirtSetupCard({
     lastWin,
     autoSpinsRemaining,
     onStartAutoSpin,
-    onForceBonus,
-    onForceChest,
-    onForceFullBoard,
     speed,
     onSetSpeed,
 }: PaydirtSetupCardProps) {
@@ -308,38 +299,6 @@ export default function PaydirtSetupCard({
                                 : clampedCount === 1
                                     ? `Spin — ${bet.toFixed(2)} APE`
                                     : `Buy ${clampedCount} Spins — ${bulkCost.toFixed(2)} APE`}
-                        </Button>
-
-                        {/* Dev/QA: skip straight to a bonus round. Re-rolls seeds
-                            behind the scenes until one triggers, then plays it. */}
-                        <Button
-                            onClick={onForceBonus}
-                            disabled={!canPlay || autoSpinning}
-                            variant="outline"
-                            className="order-6 lg:order-6 w-full text-xs font-semibold border-dashed opacity-70 hover:opacity-100"
-                        >
-                            🎰 Force Bonus (dev)
-                        </Button>
-                        {/* Dev/QA: find a seed where the bonus triggers AND a
-                            chest lands. Lets us test the sweep/multiplier flow. */}
-                        <Button
-                            onClick={onForceChest}
-                            disabled={!canPlay || autoSpinning}
-                            variant="outline"
-                            className="order-7 lg:order-7 w-full text-xs font-semibold border-dashed opacity-70 hover:opacity-100"
-                        >
-                            📦 Force Chest (dev)
-                        </Button>
-                        {/* Dev/QA: find a seed where the bonus triggers AND
-                            the entire 5×5 grid fills (Grand jackpot). Roll
-                            budget is 200k since natural rate is ~1/16k. */}
-                        <Button
-                            onClick={onForceFullBoard}
-                            disabled={!canPlay || autoSpinning}
-                            variant="outline"
-                            className="order-8 lg:order-8 w-full text-xs font-semibold border-dashed opacity-70 hover:opacity-100"
-                        >
-                            💎 Force Full Board (dev)
                         </Button>
                     </CardContent>
                 </>

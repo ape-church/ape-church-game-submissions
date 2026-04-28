@@ -52,7 +52,6 @@ import {
     pickCelebrationTier,
     isMarker,
     type SymbolType,
-    type JackpotTier,
 } from "./paydirtConfig";
 import {
     initialState,
@@ -1504,100 +1503,6 @@ function PaydirtComponentInner({ game }: PaydirtComponentProps) {
         void playGame();
     }, [clearAllTimers, playGame]);
 
-    /** Dev/QA helper: roll seeds until we find one that triggers Hold the
-     *  Gems (natural rate ~4%, so ~25 attempts on average), then play
-     *  that one. Lets us exercise the bonus round without grinding spins. */
-    const handleForceBonus = useCallback(() => {
-        const bet = state.bet;
-        if (bet <= 0 || bet > state.balance) return;
-        for (let i = 0; i < 500; i++) {
-            const seed = generateSeed();
-            const outcome = resolveOutcome(seed, state.jackpotPools);
-            if (outcome.triggered) {
-                void playGame(seed);
-                return;
-            }
-        }
-        toast.error("No trigger in 500 rolls — try again");
-    }, [state.bet, state.balance, state.jackpotPools, playGame]);
-
-    /** Dev/QA: find a seed that triggers the bonus AND lands at least one
-     *  chest. Natural rate per triggered round is ~20-25%, so average
-     *  ~120 attempts (sub-100ms on a modern machine). */
-    const handleForceChest = useCallback(() => {
-        const bet = state.bet;
-        if (bet <= 0 || bet > state.balance) return;
-        for (let i = 0; i < 3000; i++) {
-            const seed = generateSeed();
-            const outcome = resolveOutcome(seed, state.jackpotPools);
-            if (
-                outcome.triggered &&
-                outcome.respinSequence.some((s) => s.chest !== undefined)
-            ) {
-                void playGame(seed);
-                return;
-            }
-        }
-        toast.error("No chest found in 3000 rolls — try again");
-    }, [state.bet, state.balance, state.jackpotPools, playGame]);
-
-    /** Dev/QA: skip the math layer entirely and play a hand-crafted
-     *  full-board outcome. No seed search (which had to comb 200k rolls to
-     *  find a natural full-board → tab-blocking even when chunked). The
-     *  GameOutcome shape is the contract the animation pipeline consumes;
-     *  we build a valid one with all 4 markers filled at trigger and a
-     *  single respin step that lands every non-marker cell at once. */
-    const handleForceFullBoard = useCallback(() => {
-        const bet = state.bet;
-        if (bet <= 0 || bet > state.balance) return;
-
-        const MARKERS = GAME_CONFIG.MARKER_POSITIONS as readonly number[];
-        const NON_MARKERS = GAME_CONFIG.NON_MARKER_POSITIONS as readonly number[];
-
-        const baseReelStops: SymbolType[] = new Array(GAME_CONFIG.TOTAL_POSITIONS).fill(
-            "empty-pan",
-        );
-        for (const m of MARKERS) baseReelStops[m] = "gold";
-
-        const startingNuggetValues = new Map<number, number>();
-        const startingNuggetTiers = new Map<number, JackpotTier>();
-        for (const m of MARKERS) {
-            startingNuggetValues.set(m, 1);
-            startingNuggetTiers.set(m, "none");
-        }
-
-        const hits = [...NON_MARKERS];
-        const values = hits.map(() => 1);
-        const tiers: JackpotTier[] = hits.map(() => "none");
-
-        const fullBoardOutcome: GameOutcome = {
-            seed: ("0x" + "ff".repeat(32)) as Hex,
-            baseReelStops,
-            markerFills: [true, true, true, true],
-            markerLandOrder: [...MARKERS],
-            hardSpotIndex: NON_MARKERS[0],
-            startingNuggetValues,
-            startingNuggetTiers,
-            // One respin step that fills every non-marker cell. Counter
-            // resets to RESPINS_INITIAL after a hit, so we set after = initial.
-            respinSequence: [{
-                hits,
-                values,
-                tiers,
-                counterBefore: GAME_CONFIG.RESPINS_INITIAL,
-                counterAfter: GAME_CONFIG.RESPINS_INITIAL,
-            }],
-            jackpotTier: "grand",
-            // Markers (4 × 1) + non-markers (21 × 1) + grand pool added on top.
-            totalPayoutMultiplier: 25 + GAME_CONFIG.JACKPOT_GRAND_START,
-            basePayoutMultiplier: 0,
-            basePayoutBreakdown: [],
-            triggered: true,
-        };
-
-        void playGame(undefined, fullBoardOutcome);
-    }, [state.bet, state.balance, playGame]);
-
     /** Begin auto-spinning N rounds. Sets the counter and kicks off the
      *  first spin; the gameOver effect chains the rest. */
     const handleStartAutoSpin = useCallback((count: number) => {
@@ -1798,9 +1703,6 @@ function PaydirtComponentInner({ game }: PaydirtComponentProps) {
                     lastWin={state.lastWin}
                     autoSpinsRemaining={state.autoSpinsRemaining}
                     onStartAutoSpin={handleStartAutoSpin}
-                    onForceBonus={handleForceBonus}
-                    onForceChest={handleForceChest}
-                    onForceFullBoard={handleForceFullBoard}
                     speed={state.speed}
                     onSetSpeed={(next) => setState((s) => ({ ...s, speed: next }))}
                 />
