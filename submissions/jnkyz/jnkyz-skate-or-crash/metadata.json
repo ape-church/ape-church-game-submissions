@@ -24,8 +24,8 @@
     "crash",
     "skate"
   ],
-  "thumbnail": "/submissions/jnkyz-skate-or-crash/card.png",
-  "banner": "/submissions/jnkyz-skate-or-crash/banner.png",
+  "thumbnail": "/jnkyz-skate-or-crash/card.png",
+  "banner": "/jnkyz-skate-or-crash/banner.png",
   "mainComponent": "MyGame.tsx",
   "windowComponent": "MyGameWindow.tsx",
   "setupComponent": "MyGameSetupCard.tsx",
