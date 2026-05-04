@@ -20,7 +20,7 @@
   "status": "pending",
   "category": "strategy",
   "tags": [
-    "multipliers",
+    "Multiplier",
     "strategy",
     "game"
   ],
@@ -30,6 +30,6 @@
   "windowComponent": "limboWindow.tsx",
   "setupComponent": "limboSetupCard.tsx",
   "configFile": "limboConfig.ts",
-  "version": "2.0.0",
-  "submittedAt": "2026-05-02"
+  "version": "1.0.0",
+  "submittedAt": "2026-04-22"
 }

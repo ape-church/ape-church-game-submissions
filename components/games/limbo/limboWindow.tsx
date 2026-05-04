@@ -1,16 +1,6 @@
 "use client";
 
 import React from "react";
-import {
-    MAX_TARGET_MULTIPLIER,
-    MAX_WIN_CHANCE,
-    MIN_TARGET_MULTIPLIER,
-    MIN_WIN_CHANCE,
-    clampTargetMultiplier,
-    clampWinChance,
-    getTargetForWinChance,
-    getWinChanceForTarget,
-} from "./limboConfig";
 
 interface RecentMultiplierResult {
     id: number;
@@ -18,14 +8,13 @@ interface RecentMultiplierResult {
     isWin: boolean;
 }
 
-interface LimboGameWindowProps {
+interface MyGameWindowProps {
     recentMultipliers: RecentMultiplierResult[];
     currentMultiplier: number;
     isRolling: boolean;
     isWin: boolean | null;
     targetMultiplier: number;
     winChance: number;
-    houseEdge: number;
     onTargetMultiplierChange: (value: number) => void;
     onWinChanceChange: (value: number) => void;
 }
@@ -33,14 +22,13 @@ interface LimboGameWindowProps {
 const formatMultiplier = (value: number) => `${value.toFixed(2)}x`;
 const HISTORY_CARD_SLOT_WIDTH = 92;
 
-const LimboGameWindow: React.FC<LimboGameWindowProps> = ({
+const MyGameWindow: React.FC<MyGameWindowProps> = ({
     recentMultipliers,
     currentMultiplier,
     isRolling,
     isWin,
     targetMultiplier,
     winChance,
-    houseEdge,
     onTargetMultiplierChange,
     onWinChanceChange,
 }) => {
@@ -55,8 +43,10 @@ const LimboGameWindow: React.FC<LimboGameWindowProps> = ({
         // Only update if the input is focused and being edited
         if (document.activeElement && document.activeElement.classList.contains('limbo-input-target')) {
             const parsed = Number(targetInputValue);
-            if (!isNaN(parsed) && parsed >= MIN_TARGET_MULTIPLIER && parsed <= MAX_TARGET_MULTIPLIER) {
-                const nextWinChance = getWinChanceForTarget(parsed, houseEdge);
+            if (!isNaN(parsed) && parsed >= 1.01 && parsed <= 1000) {
+                const HOUSE_EDGE = 0.98;
+                let nextWinChance = (HOUSE_EDGE / parsed) * 100;
+                nextWinChance = Math.max(0.01, Math.min(98, Number(nextWinChance.toFixed(3))));
                 // Show 3 decimals if < 1, 2 otherwise
                 const format = (val: number) => {
                     if (val < 1) return val.toFixed(3).replace(/\.000$/, '').replace(/(\.[0-9]*[1-9])0+$/, '$1');
@@ -66,17 +56,19 @@ const LimboGameWindow: React.FC<LimboGameWindowProps> = ({
                 setWinChanceInputValue(format(nextWinChance));
             }
         }
-    }, [targetInputValue, houseEdge]);
+    }, [targetInputValue]);
 
     React.useEffect(() => {
         if (document.activeElement && document.activeElement.classList.contains('limbo-input-chance')) {
             const parsed = Number(winChanceInputValue);
-            if (!isNaN(parsed) && parsed >= MIN_WIN_CHANCE && parsed <= MAX_WIN_CHANCE) {
-                const nextTarget = getTargetForWinChance(parsed, houseEdge);
-                setTargetInputValue(String(clampTargetMultiplier(nextTarget)));
+            if (!isNaN(parsed) && parsed >= 0.01 && parsed <= 98) {
+                // Use the same math as onWinChanceChange, but with correct HOUSE_EDGE
+                const HOUSE_EDGE = 0.98;
+                const nextTarget = HOUSE_EDGE / (parsed / 100);
+                setTargetInputValue(String(Math.max(1.01, Math.min(1000, Number(nextTarget.toFixed(2))))));
             }
         }
-    }, [winChanceInputValue, houseEdge]);
+    }, [winChanceInputValue]);
 
     // Sync display when parent commits a new value (e.g. after a round resolves)
     // Format: 3 decimals if < 1, else 2 decimals, no trailing .00
@@ -152,9 +144,9 @@ const LimboGameWindow: React.FC<LimboGameWindowProps> = ({
                     <div className="limbo-input-wrap">
                         <input
                             type="number"
-                            min={MIN_TARGET_MULTIPLIER}
-                            max={MAX_TARGET_MULTIPLIER}
-                            step={0.01}
+                            min={1.01}
+                            max={1000}
+                            step={1}
                             value={targetInputValue}
                             inputMode="decimal"
                             pattern="[0-9.]*"
@@ -164,7 +156,7 @@ const LimboGameWindow: React.FC<LimboGameWindowProps> = ({
                                 let val = event.target.value;
                                 val = val.replace(/[^\d.]/g, '');
                                 let num = Number(val);
-                                if (num > MAX_TARGET_MULTIPLIER) num = MAX_TARGET_MULTIPLIER;
+                                if (num > 1000) num = 1000;
                                 // Limit to 3 decimals if < 0.1, else 2 decimals, no trailing .00
                                 if (num) {
                                     if (num < 1) {
@@ -179,8 +171,8 @@ const LimboGameWindow: React.FC<LimboGameWindowProps> = ({
                             }}
                             onBlur={() => {
                                 let parsed = Number(targetInputValue);
-                                if (isNaN(parsed) || parsed < MIN_TARGET_MULTIPLIER) parsed = MIN_TARGET_MULTIPLIER;
-                                if (parsed > MAX_TARGET_MULTIPLIER) parsed = MAX_TARGET_MULTIPLIER;
+                                if (isNaN(parsed) || parsed < 1.01) parsed = 1.01;
+                                if (parsed > 1000) parsed = 1000;
                                 parsed = parsed < 1 ? Number(parsed.toFixed(3)) : Number(parsed.toFixed(2));
                                 onTargetMultiplierChange(parsed);
                                 setTargetInputValue(String(parsed));
@@ -196,9 +188,9 @@ const LimboGameWindow: React.FC<LimboGameWindowProps> = ({
                     <div className="limbo-input-wrap">
                         <input
                             type="number"
-                            min={MIN_WIN_CHANCE}
-                            max={MAX_WIN_CHANCE}
-                            step={0.01}
+                            min={0.01}
+                            max={98}
+                            step={1}
                             value={winChanceInputValue}
                             inputMode="decimal"
                             pattern="[0-9.]*"
@@ -208,16 +200,16 @@ const LimboGameWindow: React.FC<LimboGameWindowProps> = ({
                                 let val = event.target.value;
                                 val = val.replace(/[^\d.]/g, '');
                                 let num = Number(val);
-                                if (num > MAX_WIN_CHANCE) num = MAX_WIN_CHANCE;
+                                if (num > 98) num = 98;
                                 // Limit to 2 decimals, but no trailing .00
                                 val = num ? (Number.isInteger(num) ? String(num) : num.toFixed(2).replace(/\.00$/, '').replace(/(\.[0-9]*[1-9])0+$/, '$1')) : val;
                                 setWinChanceInputValue(val);
                             }}
                             onBlur={() => {
                                 let parsed = Number(winChanceInputValue);
-                                if (isNaN(parsed) || parsed < MIN_WIN_CHANCE) parsed = MIN_WIN_CHANCE;
-                                if (parsed > MAX_WIN_CHANCE) parsed = MAX_WIN_CHANCE;
-                                parsed = clampWinChance(Number(parsed.toFixed(2)));
+                                if (isNaN(parsed) || parsed < 0.01) parsed = 0.01;
+                                if (parsed > 98) parsed = 98;
+                                parsed = Number(parsed.toFixed(2));
                                 onWinChanceChange(parsed);
                                 setWinChanceInputValue(String(parsed));
                             }}
@@ -232,4 +224,4 @@ const LimboGameWindow: React.FC<LimboGameWindowProps> = ({
     );
 };
 
-export default LimboGameWindow;
+export default MyGameWindow;

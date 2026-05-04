@@ -27,11 +27,11 @@
     font-display: swap;
 }
 
-.limbo-setup-bg-selector {
+.mygame-bg-selector {
     background: #24323A;
 }
 
-.limbo-setup-selector-btn {
+.mygame-selector-btn {
     background: transparent;
     color: rgba(255, 255, 255, 0.6);
     border: none;
@@ -40,25 +40,25 @@
     opacity: 1;
 }
 
-.limbo-setup-selector-btn-active {
+.mygame-selector-btn-active {
     background: #8CFF00;
     color: #0d1803;
 }
 
-.limbo-setup-selector-btn-locked {
+.mygame-selector-btn-locked {
     cursor: not-allowed;
     opacity: 0.55;
 }
 
-.limbo-setup-heading {
+.mygame-heading {
     font-family: "Nohemi", sans-serif;
 }
 
-.limbo-setup-body {
+.mygame-body {
     font-family: "Afacad", sans-serif;
 }
 
-.limbo-setup-input {
+.mygame-input {
     background: #24323A;
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #FFFFFF;
@@ -66,7 +66,7 @@
     outline: none;
 }
 
-.limbo-setup-rounds-left {
+.mygame-rounds-left {
     color: #8CFF00;
     font-family: "Nohemi", sans-serif;
     font-weight: 700;
@@ -74,7 +74,7 @@
     line-height: 1.3;
 }
 
-.limbo-setup-total-payout {
+.mygame-total-payout {
     color: #D8EAFA;
     font-family: "Nohemi", sans-serif;
     font-weight: 700;
@@ -82,18 +82,18 @@
     line-height: 1.3;
 }
 
-.limbo-setup-bet-btn {
+.mygame-bet-btn {
     font-family: "Nohemi", sans-serif;
     cursor: pointer;
 }
 
-.limbo-setup-bet-btn-play {
+.mygame-bet-btn-play {
     background-color: #8CFF00;
     border-color: #8CFF00;
     color: #0d1803;
 }
 
-.limbo-setup-bet-btn-stop {
+.mygame-bet-btn-stop {
     background-color: #EF4444;
     border-color: #EF4444;
     color: #fff;
@@ -148,11 +148,6 @@
     font-family: "Nohemi", ui-sans-serif, sans-serif;
     font-weight: 600;
     color: #dbe9f4 !important;
-}
-
-.limbo-bet-slider-shell > div > div:nth-child(2) {
-    background: #24323A !important;
-    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .limbo-bet-slider-shell > div > div:nth-child(4) button {
@@ -391,36 +386,5 @@
 
     .limbo-input-suffix {
         font-size: 20px;
-    }
-}
-
-@media (max-width: 640px) {
-    .limbo-center-stage {
-        min-height: 180px;
-    }
-
-    .limbo-main-multiplier {
-        font-size: clamp(80px, 22vw, 112px);
-    }
-
-    .limbo-bottom-panel {
-        gap: 8px;
-        padding: 10px;
-        margin-bottom: 8px;
-    }
-
-    .limbo-input-label {
-        font-size: 13px;
-    }
-
-    .limbo-input {
-        height: 38px;
-        font-size: 24px;
-        padding-right: 34px;
-    }
-
-    .limbo-input-suffix {
-        font-size: 22px;
-        right: 10px;
     }
 }
