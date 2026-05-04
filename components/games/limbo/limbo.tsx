@@ -5,6 +5,7 @@ import useSound from "use-sound";
 import GameWindow from "@/components/shared/GameWindow";
 import LimboGameWindow from "./limboWindow";
 import LimboGameSetupCard from "./limboSetupCard";
+import "./limbo.style.css";
 import { bytesToHex } from "viem";
 import { randomBytes, Game } from "@/lib/games";
 import {
