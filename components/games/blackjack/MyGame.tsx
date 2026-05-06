@@ -28,12 +28,15 @@ import {
 import { bytesToHex, Hex } from "viem";
 import { toast } from "sonner";
 import "./my-game.styles.css";
+import { myGame } from "./myGameConfig";
 
 interface MyGameComponentProps {
   game: Game;
 }
 
-const MyGameComponent: React.FC<MyGameComponentProps> = ({ game }) => {
+const MyGameComponent: React.FC = () => {
+  const game = myGame;
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const replayIdString = searchParams.get("id");
