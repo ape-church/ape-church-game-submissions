@@ -4,12 +4,11 @@ export const myGame: Game = {
   title: "Blackjack",
   description: "Beat the dealer by getting closer to 21 without going over.",
   gameAddress: "0x1234567890123456789012345678901234567890",
-  gameBackground: "/my-game/backgroundv2.png",
-  card: "/my-game/card.png",
-  banner: "/my-game/banner.png",
-  advanceToNextStateAsset: "/my-game/advance-button.png",
+  gameBackground: "/submissions/blackjack/background.png",
+  card: "/submissions/blackjack/card.png",
+  banner: "/submissions/blackjack/banner.png",
+  advanceToNextStateAsset: "/submissions/blackjack/advance-button.png",
   themeColorBackground: "#0F7B45",
-  song: "/my-game/audio/song.mp3",
   payouts: {
     0: {
       0: { 0: 20000 },

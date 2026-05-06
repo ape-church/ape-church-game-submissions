@@ -10,8 +10,10 @@ import {
   type RoundPhase,
 } from "./myGameConfig";
 
+const ASSET_BASE = "/submissions/blackjack";
+
 interface MyGameWindowProps {
-  game?: Game;
+  game: Game;
   phase: RoundPhase;
   playerCards: PlayingCard[];
   dealerCards: PlayingCard[];
@@ -46,7 +48,7 @@ const getCardImagePath = (card: PlayingCard): string => {
     spades: "S",
   };
 
-  return `/my-game/cards/${card.rank}${suitMap[card.suit]}.png`;
+  return `${ASSET_BASE}/cards/${card.rank}${suitMap[card.suit]}.png`;
 };
 
 const getOutcomeText = (outcome: RoundOutcome): string => {
@@ -72,12 +74,9 @@ const MyGameWindow: React.FC<MyGameWindowProps> = ({
   payoutAmount,
   outcome,
 }) => {
+  void gameCompleted;
 
-
-  const visibleDealerCards = dealerHidden
-    ? dealerCards.slice(0, 1)
-    : dealerCards;
-
+  const visibleDealerCards = dealerHidden ? dealerCards.slice(0, 1) : dealerCards;
   const playerTotal = calculateHandValue(playerCards);
   const dealerTotal = dealerHidden ? null : calculateHandValue(dealerCards);
   const outcomeText = getOutcomeText(outcome);
@@ -88,7 +87,7 @@ const MyGameWindow: React.FC<MyGameWindowProps> = ({
         <div className="my-game-blackjack-shell my-game-blackjack-shell--classic">
           <div className="my-game-blackjack-topbar my-game-blackjack-topbar--classic">
             <div className="my-game-blackjack-topbar-left">
-              <p className="my-game-blackjack-title">{game?.title || "Blackjack"}</p>
+              <p className="my-game-blackjack-title">{game.title}</p>
             </div>
 
             <div className="my-game-blackjack-summary">
@@ -127,7 +126,7 @@ const MyGameWindow: React.FC<MyGameWindowProps> = ({
 
                 {dealerHidden && dealerCards.length > 1 ? (
                   <Image
-                    src="/my-game/cards/back.png"
+                    src={`${ASSET_BASE}/cards/back.png`}
                     alt="Hidden card"
                     width={64}
                     height={92}
@@ -139,8 +138,10 @@ const MyGameWindow: React.FC<MyGameWindowProps> = ({
 
             <section className="my-game-blackjack-lane my-game-blackjack-lane--player">
               <div className="my-game-blackjack-lane-header">
-                <h3 className="my-game-blackjack-lane-title">Wizard</h3>
-                <span className="my-game-blackjack-total-pill">{`Total: ${playerTotal}`}</span>
+                <h3 className="my-game-blackjack-lane-title">Player</h3>
+                <span className="my-game-blackjack-total-pill">
+                  {`Total: ${playerTotal}`}
+                </span>
               </div>
 
               <div className="my-game-blackjack-cards-row my-game-blackjack-cards-row--player">
@@ -158,39 +159,39 @@ const MyGameWindow: React.FC<MyGameWindowProps> = ({
             </section>
           </div>
 
-         <div className="my-game-blackjack-bottombar my-game-blackjack-bottombar--classic">
-  <div className="my-game-blackjack-status-panel">
-    {outcomeText ? (
-      <p className="my-game-blackjack-outcome">{outcomeText}</p>
-    ) : (
-      <p className="my-game-blackjack-status-text">{statusMessage}</p>
-    )}
-  </div>
+          <div className="my-game-blackjack-bottombar my-game-blackjack-bottombar--classic">
+            <div className="my-game-blackjack-status-panel">
+              {outcomeText ? (
+                <p className="my-game-blackjack-outcome">{outcomeText}</p>
+              ) : (
+                <p className="my-game-blackjack-status-text">{statusMessage}</p>
+              )}
+            </div>
 
-  {phase === "player-turn" ? (
-    <div className="my-game-blackjack-actions">
-      <button
-        type="button"
-        className="my-game-blackjack-button my-game-blackjack-button--primary"
-        onClick={onHit}
-        disabled={!canHit}
-      >
-        Hit
-      </button>
+            {phase === "player-turn" ? (
+              <div className="my-game-blackjack-actions">
+                <button
+                  type="button"
+                  className="my-game-blackjack-button my-game-blackjack-button--primary"
+                  onClick={onHit}
+                  disabled={!canHit}
+                >
+                  Hit
+                </button>
 
-      <button
-        type="button"
-        className="my-game-blackjack-button my-game-blackjack-button--secondary"
-        onClick={onStand}
-        disabled={!canStand}
-      >
-        Stand
-      </button>
-    </div>
-  ) : (
-    <div className="my-game-blackjack-actions my-game-blackjack-actions--placeholder" />
-  )}
-</div>
+                <button
+                  type="button"
+                  className="my-game-blackjack-button my-game-blackjack-button--secondary"
+                  onClick={onStand}
+                  disabled={!canStand}
+                >
+                  Stand
+                </button>
+              </div>
+            ) : (
+              <div className="my-game-blackjack-actions my-game-blackjack-actions--placeholder" />
+            )}
+          </div>
         </div>
       </div>
     </div>
