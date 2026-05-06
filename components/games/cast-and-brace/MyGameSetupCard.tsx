@@ -1,5 +1,7 @@
 import React from "react";
+import Image from "next/image";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
     Tooltip,
     TooltipContent,
@@ -13,6 +15,8 @@ import BetAmountInput from "@/components/shared/BetAmountInput";
 import CastsSlider from "./CastsSlider";
 import {
     clampCastsPerSession,
+    fishingManualAdvanceEnabled,
+    fishingPhaseDisplayLabel,
     MY_GAME_MAX_CASTS_PER_SESSION,
     MY_GAME_MIN_CASTS_PER_SESSION,
     type FishPlatformResult,
@@ -50,6 +54,9 @@ interface MyGameSetupCardProps {
     walletBalance: number;
     minBet: number;
     maxBet: number;
+
+    /** Reel minigame HUD — shown while reeling (between status and primary actions). */
+    reelSlot: React.ReactNode;
 }
 
 const JACKPOT_INFO =
@@ -57,6 +64,12 @@ const JACKPOT_INFO =
 
 const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
     game,
+    onPlay,
+    onAdvance,
+    onRewatch,
+    onReset,
+    onPlayAgain,
+    playAgainText = "Play Again",
     currentView,
     betAmount,
     setBetAmount,
@@ -71,6 +84,8 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
     walletBalance,
     maxBet,
     minBet,
+    fishingPhase,
+    reelSlot,
 }) => {
     const wagerForCatchStats =
         settledBetAmount ?? betAmount;
@@ -108,6 +123,14 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
 
     const lockedCasts = clampCastsPerSession(castsPerSession);
     const totalBetAmount = (betAmount || 0) * lockedCasts;
+    const sessionPlayBlocked =
+        betAmount <= 0 ||
+        isLoading ||
+        (betAmount || 0) * lockedCasts > walletBalance;
+    const advanceEnabled = fishingManualAdvanceEnabled(
+        currentView,
+        fishingPhase,
+    );
 
     const getBetAmountText = (): string =>
         `${(betAmount || 0).toLocaleString([], {
@@ -177,11 +200,122 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
         );
     };
 
+    const renderGameActions = (
+        desktopOrderClass: "lg:order-2" | "lg:order-3",
+    ): React.ReactElement => (
+        <div
+            className={`order-1 mt-0 flex w-full min-w-0 shrink-0 flex-col gap-3 font-roboto pt-2 pb-1 lg:mt-auto lg:pb-0 ${desktopOrderClass}`}
+        >
+            <div className="rounded-lg border border-[#2a3640]/80 bg-black/25 px-3 py-2.5 text-center shadow-inner backdrop-blur-[2px] min-[480px]:px-4 min-[480px]:py-3">
+                <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#91989C] min-[480px]:text-xs">
+                    Status
+                </p>
+                <p
+                    className="mt-0.5 text-lg font-semibold leading-tight min-[480px]:text-xl"
+                    style={{ color: themeColorBackground }}
+                >
+                    {fishingPhaseDisplayLabel(fishingPhase)}
+                </p>
+            </div>
+
+            {reelSlot}
+
+            {currentView === 0 && (
+                <Button
+                    type="button"
+                    onClick={onPlay}
+                    className="w-full"
+                    style={{
+                        backgroundColor: themeColorBackground,
+                        borderColor: themeColorBackground,
+                    }}
+                    disabled={sessionPlayBlocked}
+                    title={
+                        (betAmount || 0) * lockedCasts > walletBalance
+                            ? `Need at least ${(
+                                  (betAmount || 0) * lockedCasts
+                              ).toLocaleString([], {
+                                  maximumFractionDigits: 2,
+                              })} APE for this session`
+                            : undefined
+                    }
+                >
+                    Cast line
+                    {castsPerSession > 1
+                        ? ` (${lockedCasts}×)`
+                        : ""}
+                </Button>
+            )}
+
+            {currentView === 1 && (
+                <div className="flex flex-col items-center gap-2">
+                    {game.advanceToNextStateAsset ? (
+                        <button
+                            type="button"
+                            onClick={onAdvance}
+                            disabled={!advanceEnabled}
+                            className="w-full max-w-[220px] disabled:opacity-40 min-[480px]:max-w-[260px]"
+                        >
+                            <Image
+                                src={game.advanceToNextStateAsset}
+                                alt="Next phase"
+                                width={196.5}
+                                height={179.82}
+                                className="mx-auto h-[88px] w-[96px] transition-transform duration-100 ease-out active:scale-97 min-[480px]:h-[100px] min-[480px]:w-[109px]"
+                            />
+                        </button>
+                    ) : (
+                        <Button
+                            type="button"
+                            onClick={onAdvance}
+                            className="w-full max-w-md"
+                            disabled={!advanceEnabled}
+                        >
+                            Next phase
+                        </Button>
+                    )}
+                </div>
+            )}
+
+            {currentView === 2 && (
+                <div className="flex w-full flex-col gap-2.5">
+                    <Button
+                        type="button"
+                        className="w-full"
+                        style={{
+                            backgroundColor: themeColorBackground,
+                            borderColor: themeColorBackground,
+                        }}
+                        onClick={onPlayAgain}
+                    >
+                        {playAgainText}
+                    </Button>
+                    <Button
+                        type="button"
+                        className="w-full"
+                        variant="secondary"
+                        onClick={onRewatch}
+                    >
+                        Rewatch
+                    </Button>
+                    <Button
+                        type="button"
+                        className="w-full"
+                        variant="secondary"
+                        onClick={onReset}
+                    >
+                        Change Bet
+                    </Button>
+                </div>
+            )}
+        </div>
+    );
+
     return (
         <Card className="flex h-full min-h-0 w-full flex-col p-4 sm:p-6">
             {currentView === 0 && (
                 <>
-                    <CardContent className="font-roboto">
+                    <CardContent className="order-2 font-roboto lg:order-1">
                         <div className="mt-0">
                             <BetAmountInput
                                 min={0}
@@ -244,9 +378,11 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                         />
                     </CardContent>
 
-                    <div className="grow" />
+                    <div className="hidden min-h-2 grow lg:order-2 lg:block" />
 
-                    <CardFooter className="mt-6 flex w-full flex-col font-roboto">
+                    {renderGameActions("lg:order-3")}
+
+                    <CardFooter className="order-3 mt-4 flex w-full flex-col font-roboto sm:mt-6 lg:order-4">
                         <div className="flex w-full flex-col items-center gap-2 text-xs font-medium text-[#91989C]">
                             <div className="flex w-full items-center justify-between gap-2">
                                 <div className="flex items-center gap-2">
@@ -278,41 +414,47 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
             )}
 
             {currentView === 1 && (
-                <CardContent className="flex grow flex-col gap-4 py-6 font-roboto">
-                    {StatsBlock({})}
-                </CardContent>
+                <>
+                    <CardContent className="order-2 flex min-h-0 flex-1 flex-col gap-4 py-6 font-roboto lg:order-1">
+                        {StatsBlock({})}
+                    </CardContent>
+                    {renderGameActions("lg:order-2")}
+                </>
             )}
 
             {currentView === 2 && (
-                <CardContent className="flex min-h-0 grow flex-col gap-4 overflow-y-auto font-roboto sm:gap-8 lg:justify-between">
-                    {StatsBlock({ showWallet: true })}
+                <>
+                    <CardContent className="order-2 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto font-roboto sm:gap-8 lg:order-1">
+                        {StatsBlock({ showWallet: true })}
 
-                    <div className="text-center">
-                        <p className="text-base text-[#91989C] sm:text-lg">
-                            Catch
-                        </p>
-                        <p
-                            className="mt-1 text-pretty text-xl font-semibold sm:text-2xl"
-                            style={{ color: themeColorBackground }}
-                        >
-                            {endgameOutcome !== null
-                                ? endgameOutcome.displayName
-                                : "—"}
-                        </p>
-                        {endgameOutcome !== null && (
-                            <p className="mt-1 text-xs font-medium leading-snug text-[#91989C] sm:text-sm">
-                                {endgameOutcome.tier} · {endgameOutcome.type}
+                        <div className="text-center">
+                            <p className="text-base text-[#91989C] sm:text-lg">
+                                Catch
                             </p>
-                        )}
-                        {endgameOutcome !== null && (
-                            <p className="mt-2 font-nohemia text-2xl font-bold tabular-nums text-foreground sm:text-3xl">
-                                {formatChartMultiplier(
-                                    endgameOutcome.multiplier,
-                                )}
+                            <p
+                                className="mt-1 text-pretty text-xl font-semibold sm:text-2xl"
+                                style={{ color: themeColorBackground }}
+                            >
+                                {endgameOutcome !== null
+                                    ? endgameOutcome.displayName
+                                    : "—"}
                             </p>
-                        )}
-                    </div>
-                </CardContent>
+                            {endgameOutcome !== null && (
+                                <p className="mt-1 text-xs font-medium leading-snug text-[#91989C] sm:text-sm">
+                                    {endgameOutcome.tier} · {endgameOutcome.type}
+                                </p>
+                            )}
+                            {endgameOutcome !== null && (
+                                <p className="mt-2 font-nohemia text-2xl font-bold tabular-nums text-foreground sm:text-3xl">
+                                    {formatChartMultiplier(
+                                        endgameOutcome.multiplier,
+                                    )}
+                                </p>
+                            )}
+                        </div>
+                    </CardContent>
+                    {renderGameActions("lg:order-2")}
+                </>
             )}
         </Card>
     );

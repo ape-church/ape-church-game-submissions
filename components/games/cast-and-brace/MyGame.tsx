@@ -19,7 +19,6 @@ import MyGameSetupCard from "./MyGameSetupCard";
 import MainMenuOverlay from "./MainMenuOverlay";
 import ManifestOverlay from "./ManifestOverlay";
 import ReelMeterHud from "./ReelMeterHud";
-import MyGameUnderGameActions from "./MyGameUnderGameActions";
 import { useMyGamePlayerStats } from "./hooks/useMyGamePlayerStats";
 import {
     BITE_ALERT_MS,
@@ -47,14 +46,13 @@ import { bytesToHex, Hex } from "viem";
 import { toast } from "sonner";
 import { MyGameAudioController } from "./audio/myGameAudioController";
 import { resolveOutcomeFromPlatform } from "./config/outcomeResolve";
-
-interface MyGameComponentProps {
-    game: Game;
-}
+import { myGame } from "./myGameConfig";
 
 type EntryOverlay = "none" | "menu" | "manifest";
 
-const MyGameInner: React.FC<MyGameComponentProps> = ({ game }) => {
+const MyGameComponent: React.FC = () => {
+    const game = myGame;
+    
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -738,10 +736,10 @@ const MyGameInner: React.FC<MyGameComponentProps> = ({ game }) => {
             className="min-h-0"
             onPointerDownCapture={handleGameColumnPointerDownCapture}
         >
-            <div className="flex min-h-0 flex-col gap-4 sm:gap-8 lg:grid lg:grid-cols-[minmax(0,2.85fr)_minmax(0,1fr)] lg:items-start lg:gap-x-8 lg:gap-y-0 xl:gap-x-10">
-                    <div className="flex min-h-0 min-w-0 flex-col gap-3">
+            <div className="flex min-h-0 flex-col gap-4 sm:gap-8 lg:flex-row lg:items-stretch lg:gap-8 xl:gap-10">
+                    <div className="flex min-h-0 min-w-0 w-full flex-col lg:min-h-0 lg:flex-[2.85] lg:basis-0">
                         <div
-                            className="relative w-full min-w-0 shrink-0 overflow-hidden"
+                            className="relative w-full min-w-0 overflow-hidden"
                             style={{
                                 aspectRatio: `${MY_GAME_BG_PIXEL_WIDTH} / ${Math.round(MY_GAME_BG_PIXEL_HEIGHT * 1.1)}`,
                             }}
@@ -842,42 +840,9 @@ const MyGameInner: React.FC<MyGameComponentProps> = ({ game }) => {
                                 className="z-[22]"
                             />
                         </div>
-                        <MyGameUnderGameActions
-                            game={game}
-                            currentView={currentView}
-                            fishingPhase={fishingPhase}
-                            themeColorBackground={
-                                game.themeColorBackground ?? "#0d9488"
-                            }
-                            betAmount={betAmount}
-                            walletBalance={walletBalance}
-                            castsPerSession={castsPerSession}
-                            sessionPlayBlocked={
-                                betAmount <= 0 ||
-                                isLoading ||
-                                betAmount *
-                                    clampCastsPerSession(castsPerSession) >
-                                    walletBalance
-                            }
-                            onPlay={async () => await playGame()}
-                            onAdvance={handleStateAdvance}
-                            onPlayAgain={async () => await handlePlayAgain()}
-                            onRewatch={handleRewatch}
-                            onReset={() => handleReset(false)}
-                            playAgainText={playAgainText}
-                            reelSlot={
-                                showReelHudBelowGame ? (
-                                    <ReelMeterHud
-                                        progress={reelProgress}
-                                        reelRetracting={isReelPullAnim}
-                                        onReelTap={handleReelMeterTap}
-                                    />
-                                ) : null
-                            }
-                        />
                     </div>
 
-                    <div className="flex min-h-0 min-w-0 flex-col lg:min-h-0">
+                    <div className="flex min-h-0 min-w-0 w-full flex-col lg:min-h-0 lg:flex-1 lg:basis-0">
                         <MyGameSetupCard
                             game={game}
                             onPlay={async () => await playGame()}
@@ -905,19 +870,19 @@ const MyGameInner: React.FC<MyGameComponentProps> = ({ game }) => {
                             castsPerSession={castsPerSession}
                             setCastsPerSession={setCastsPerSession}
                             sessionTotalStakeApe={sessionStakeApe}
+                            reelSlot={
+                                showReelHudBelowGame ? (
+                                    <ReelMeterHud
+                                        progress={reelProgress}
+                                        reelRetracting={isReelPullAnim}
+                                        onReelTap={handleReelMeterTap}
+                                    />
+                                ) : null
+                            }
                         />
                     </div>
                 </div>
         </div>
-    );
-};
-
-const MyGameComponent: React.FC<MyGameComponentProps> = (props) => {
-    // Next requires useSearchParams() consumers to be under Suspense for prerender.
-    return (
-        <Suspense fallback={null}>
-            <MyGameInner {...props} />
-        </Suspense>
     );
 };
 
