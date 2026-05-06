@@ -10,6 +10,7 @@ import RPSAutoBoard from "./RPSAutoBoard";
 import { bytesToHex, Hex } from "viem";
 import { toast } from "sonner";
 import "./rps.styles.css";
+import { rpsGame } from "./rpsConfig";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -84,8 +85,9 @@ function newGameId(): bigint {
 }
 
 // ── Component ──────────────────────────────────────────────────────────────────
+const RPSComponent: React.FC = () => {
+  const game = rpsGame;
 
-const RPSComponent: React.FC<{ game: Game }> = ({ game }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const replayIdString = searchParams.get("id");
