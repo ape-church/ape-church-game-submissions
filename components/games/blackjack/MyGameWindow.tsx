@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import { Game } from "@/lib/games";
 import {
@@ -11,7 +11,7 @@ import {
 } from "./myGameConfig";
 
 interface MyGameWindowProps {
-  game: Game;
+  game?: Game;
   phase: RoundPhase;
   playerCards: PlayingCard[];
   dealerCards: PlayingCard[];
@@ -88,7 +88,7 @@ const MyGameWindow: React.FC<MyGameWindowProps> = ({
         <div className="my-game-blackjack-shell my-game-blackjack-shell--classic">
           <div className="my-game-blackjack-topbar my-game-blackjack-topbar--classic">
             <div className="my-game-blackjack-topbar-left">
-              <p className="my-game-blackjack-title">{game.title}</p>
+              <p className="my-game-blackjack-title">{game?.title || "Blackjack"}</p>
             </div>
 
             <div className="my-game-blackjack-summary">
