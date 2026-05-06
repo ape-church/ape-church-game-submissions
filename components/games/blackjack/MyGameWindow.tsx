@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 import Image from "next/image";
-import useSound from "use-sound";
 import { Game } from "@/lib/games";
 import {
   calculateHandValue,
@@ -73,33 +72,7 @@ const MyGameWindow: React.FC<MyGameWindowProps> = ({
   payoutAmount,
   outcome,
 }) => {
-  const muteSfx = true;
-const sfxVolume = 0.5;
 
-const [winSFX] = useSound("/my-game/sfx/win.mp3", {
-  volume: sfxVolume,
-  soundEnabled: !muteSfx,
-  interrupt: true,
-});
-
-const [loseSFX] = useSound("/my-game/sfx/lose.mp3", {
-  volume: sfxVolume,
-  soundEnabled: !muteSfx,
-  interrupt: true,
-});
-
-  useEffect(() => {
-    if (!gameCompleted) return;
-
-    if (outcome === "player" || outcome === "push") {
-      winSFX();
-      return;
-    }
-
-    if (outcome === "dealer") {
-      loseSFX();
-    }
-  }, [gameCompleted, loseSFX, outcome, winSFX]);
 
   const visibleDealerCards = dealerHidden
     ? dealerCards.slice(0, 1)
