@@ -17,7 +17,6 @@ import { Info } from 'lucide-react';
 import { Game } from '@/lib/games';
 import BetAmountInput from '@/components/shared/BetAmountInput';
 import { CustomSlider } from '@/components/shared/CustomSlider';
-import ChipSelection, { Chip } from '@/components/shared/ChipSelection';
 import Paytable from './slot/Paytable';
 import { GamePhase } from './types';
 
@@ -86,15 +85,6 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
   const themeColorBackground = game.themeColorBackground;
   const usdMode = false;
   const [showPaytable, setShowPaytable] = useState(false);
-  const [selectedChipId, setSelectedChipId] = useState<string | null>(null);
-
-  const chips: Chip[] = [
-    { id: '1',  value: 1,  image: '/shared/chips/chip_1.png'  },
-    { id: '5',  value: 5,  image: '/shared/chips/chip_5.png'  },
-    { id: '10', value: 10, image: '/shared/chips/chip_10.png' },
-    { id: '25', value: 25, image: '/shared/chips/chip_25.png' },
-  ];
-
   const betPerSpin   = betAmount;
   const betPerLine   = betAmount / 20;
   const totalBuyIn   = betAmount * numberOfSpins;
@@ -196,13 +186,6 @@ const MyGameSetupCard: React.FC<MyGameSetupCardProps> = ({
                   themeColorBackground={themeColorBackground}
                 />
               </div>
-
-              <ChipSelection
-                chips={chips}
-                selectedChipId={selectedChipId}
-                onChipSelect={chip => setSelectedChipId(chip.id)}
-                onRemoveAllBets={() => setSelectedChipId(null)}
-              />
 
               {/* Number of spins */}
               <div className="mt-8">
