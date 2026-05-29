@@ -9,6 +9,7 @@ import { ALL_SYMBOL_IDS, NUM_REELS, NUM_ROWS, NUM_PAYLINES } from './myGameConfi
 import ReelStrip from './slot/ReelStrip';
 import GlowBorder from './slot/GlowBorder';
 import WinParticles, { WinLevel } from './slot/WinParticles';
+import FreeSpinsIntro from './slot/FreeSpinsIntro';
 
 interface MyGameWindowProps {
   game: Game;
@@ -254,27 +255,63 @@ export default function MyGameWindow({
         />
       </div>
 
-      {/* Free Spins Banner */}
-      {gameState.freeSpinsRemaining > 0 && (
+      {/* Free Spins Banner — shown while free spins are active */}
+      {gameState.freeSpinsRemaining > 0 && gameState.phase !== 'FREE_SPINS_INTRO' && (
         <div
-          className="absolute top-3 left-1/2 -translate-x-1/2 z-20 px-5 py-1 rounded-full text-sm font-bold whitespace-nowrap"
-          style={{ background: '#D4A017', color: '#000' }}
+          className="absolute top-2 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap"
+          style={{ animation: 'fsBannerPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both' }}
         >
-          FREE SPINS — {gameState.freeSpinsRemaining} remaining
+          <div
+            className="flex items-center gap-2 px-4 py-1.5 rounded-full"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0,20,30,0.95) 0%, rgba(0,40,55,0.95) 100%)',
+              border: '1.5px solid rgba(0,212,255,0.7)',
+              boxShadow: '0 0 14px rgba(0,212,255,0.5), 0 0 30px rgba(0,180,220,0.25), inset 0 0 10px rgba(0,212,255,0.06)',
+              animation: 'fsBannerGlow 1.6s ease-in-out infinite',
+            }}
+          >
+            {/* Pulsing dot */}
+            <span
+              className="inline-block rounded-full"
+              style={{
+                width: 7, height: 7,
+                background: '#00D4FF',
+                boxShadow: '0 0 6px rgba(0,212,255,0.9)',
+                animation: 'fsDotPulse 1s ease-in-out infinite',
+              }}
+            />
+            <span
+              className="text-xs font-black tracking-widest uppercase"
+              style={{ color: 'rgba(0,212,255,0.9)' }}
+            >
+              Free Spins
+            </span>
+            {/* Count badge */}
+            <span
+              className="flex items-center justify-center rounded-full font-black tabular-nums text-xs"
+              style={{
+                minWidth: 22, height: 22, padding: '0 5px',
+                background: 'rgba(0,212,255,0.15)',
+                border: '1px solid rgba(0,212,255,0.5)',
+                color: '#00D4FF',
+                textShadow: '0 0 8px rgba(0,212,255,0.9)',
+              }}
+            >
+              {gameState.freeSpinsRemaining}
+            </span>
+            <span
+              className="text-[10px] tracking-wider uppercase"
+              style={{ color: 'rgba(0,212,255,0.5)' }}
+            >
+              left
+            </span>
+          </div>
         </div>
       )}
 
-      {/* Free Spins Intro */}
+      {/* Free Spins Intro — Three.js particle burst */}
       {gameState.phase === 'FREE_SPINS_INTRO' && (
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center pointer-events-none"
-          style={{ background: 'rgba(0,0,0,0.72)' }}>
-          <p className="text-5xl font-black" style={{ color: '#FFD700', textShadow: '0 0 24px #FF8C00' }}>
-            FREE SPINS
-          </p>
-          <p className="mt-3 text-2xl text-white font-semibold">
-            {gameState.freeSpinsRemaining} spins awarded
-          </p>
-        </div>
+        <FreeSpinsIntro spinsAwarded={gameState.freeSpinsRemaining} />
       )}
 
       {/* ── Reel Grid — near full width of game window ── */}
@@ -403,6 +440,18 @@ export default function MyGameWindow({
         @keyframes winPop {
           from { opacity: 0; transform: scale(0.6); }
           to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fsBannerPop {
+          from { opacity: 0; transform: translateX(-50%) scale(0.7); }
+          to   { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
+        @keyframes fsBannerGlow {
+          0%,100% { box-shadow: 0 0 14px rgba(0,212,255,0.5), 0 0 30px rgba(0,180,220,0.25), inset 0 0 10px rgba(0,212,255,0.06); }
+          50%     { box-shadow: 0 0 22px rgba(0,212,255,0.85), 0 0 50px rgba(0,180,220,0.45), inset 0 0 16px rgba(0,212,255,0.12); }
+        }
+        @keyframes fsDotPulse {
+          0%,100% { opacity: 1; transform: scale(1); }
+          50%     { opacity: 0.4; transform: scale(0.7); }
         }
       `}</style>
     </div>
