@@ -1,0 +1,31 @@
+{
+  "team": "swamp-hop",
+  "gameName": "swamp-hop",
+  "displayTitle": "Swamp Hop",
+  "description": "Hop lily pad to lily pad with the frogling adventurer. Each hop grows your bank. One croc snap ends the run. Cash out early or keep pushing in Swamp Hop.",
+  "authors": [
+    {
+      "name": "Froglings",
+      "telegram": "arttheruler"
+    }
+  ],
+  "revenueShare": [
+    {
+      "name": "Artfrogling",
+      "telegram": "arttheruler",
+      "address": "0xd3F8dA535D0318C8f829fF38f0656daC3b740692",
+      "share": 100
+    }
+  ],
+  "status": "pending",
+  "category": "arcade",
+  "tags": ["arcade", "swamp", "risk", "frog"],
+  "thumbnail": "/swamp-hop/card.png",
+  "banner": "/swamp-hop/banner.png",
+  "mainComponent": "SwampHop.tsx",
+  "windowComponent": "SwampHopWindow.tsx",
+  "setupComponent": "SwampHopSetupCard.tsx",
+  "configFile": "swampHopConfig.ts",
+  "version": "1.0.0",
+  "submittedAt": "2026-05-30"
+}
