@@ -9,6 +9,7 @@ import SwampHopSetupCard from "./SwampHopSetupCard";
 import LumaShrineBonusRound from "./LumaShrineBonusRound";
 import { bytesToHex, Hex } from "viem";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import "./swamp-hop.styles.css";
 import {
     applyHopToBank,
@@ -22,7 +23,7 @@ import {
     precomputeHopSequence,
 } from "./swampHopLogic";
 import { getSceneForGameId } from "./swampHopSprites";
-import { LUMA_BONUS_CONFIG, LumaChoiceId } from "./swampHopConfig";
+import { LUMA_BONUS_CONFIG, LumaChoiceId, swampHop } from "./swampHopConfig";
 
 interface SwampHopComponentProps {
     game: Game;
@@ -33,8 +34,10 @@ type SwampHopView = 0 | 1 | 2 | 3;
 const MIN_BET = 1;
 const MAX_BET = 100;
 const MOCK_WALLET_BALANCE = 25;
+const MOBILE_GAME_HEIGHT = "min(100vw, 36rem)";
 
-const SwampHopComponent: React.FC<SwampHopComponentProps> = ({ game }) => {
+const SwampHop: React.FC = () => {
+    const game = swampHop;
     const router = useRouter();
     const searchParams = useSearchParams();
     const replayIdString = searchParams.get("id");
@@ -62,10 +65,37 @@ const SwampHopComponent: React.FC<SwampHopComponentProps> = ({ game }) => {
 
     const bankRef = useRef(0);
     const bankAtBonusRef = useRef<number | null>(null);
+    const layoutRef = useRef<HTMLDivElement>(null);
+    const [sessionLayoutMinHeight, setSessionLayoutMinHeight] = useState<
+        number | null
+    >(null);
 
     useEffect(() => {
         bankRef.current = currentBank;
     }, [currentBank]);
+
+    // Grid row height follows the setup card; views 2/3 have less content and shrink
+    // the game window. Lock height from view 1 (ongoing) so it stays constant.
+    useEffect(() => {
+        if (currentView === 0) {
+            setSessionLayoutMinHeight(null);
+            return;
+        }
+
+        if (currentView !== 1 || sessionLayoutMinHeight != null) {
+            return;
+        }
+
+        const frame = requestAnimationFrame(() => {
+            const layout = layoutRef.current;
+            if (!layout) {
+                return;
+            }
+            setSessionLayoutMinHeight(layout.getBoundingClientRect().height);
+        });
+
+        return () => cancelAnimationFrame(frame);
+    }, [currentView, sessionLayoutMinHeight]);
 
     const shouldShowPNL: boolean =
         !!payout && payout > 1 && payout > betAmount;
@@ -463,14 +493,36 @@ const SwampHopComponent: React.FC<SwampHopComponentProps> = ({ game }) => {
 
     return (
         <div>
-            <div className="swamp-hop-layout flex flex-col lg:flex-row gap-4 sm:gap-8 lg:gap-10">
-                <div className="swamp-hop-game-frame lg:basis-2/3 w-full">
+            <div
+                ref={layoutRef}
+                className={cn(
+                    "swamp-hop-layout flex flex-col lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-4 sm:gap-8 lg:gap-10",
+                    currentView === 0 && "swamp-hop-layout--setup",
+                    currentView !== 0 && "swamp-hop-layout--session"
+                )}
+                style={
+                    sessionLayoutMinHeight != null
+                        ? ({
+                              "--swamp-hop-session-min-h": `${sessionLayoutMinHeight}px`,
+                          } as React.CSSProperties)
+                        : undefined
+                }
+            >
+                <div
+                    className="swamp-hop-game-frame w-full min-h-0"
+                    style={
+                        {
+                            "--swamp-hop-mobile-height": MOBILE_GAME_HEIGHT,
+                        } as React.CSSProperties
+                    }
+                >
                 <GameWindow
                     game={activeGame}
                     currentGameId={currentGameId}
                     isLoading={isLoading}
                     isGameFinished={gameOver}
-                    backgroundImageClassName="opacity-75 object-cover object-bottom"
+                    customHeightMobile={MOBILE_GAME_HEIGHT}
+                    // backgroundImageClassName="opacity-75 object-cover object-bottom"
                     onPlayAgain={handlePlayAgain}
                     playAgainText={playAgainText}
                     onRewatch={handleRewatch}
@@ -557,4 +609,4 @@ const SwampHopComponent: React.FC<SwampHopComponentProps> = ({ game }) => {
     );
 };
 
-export default SwampHopComponent;
+export default SwampHop;

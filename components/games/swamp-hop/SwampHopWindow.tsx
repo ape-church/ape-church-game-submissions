@@ -375,9 +375,9 @@ const SwampHopWindow: React.FC<SwampHopWindowProps> = ({
             <AnimatePresence>
                 {showOutcome && lastHopResult != null && (
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
+                        initial={{ opacity: 0, y: 10, x: "-50%" }}
+                        animate={{ opacity: 1, y: 0, x: "-50%" }}
+                        exit={{ opacity: 0, x: "-50%" }}
                         className="swamp-hop-outcome"
                     >
                         {lastHopResult.isCroc ? (

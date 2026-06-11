@@ -28,6 +28,9 @@ const LUMA_IMAGES: Record<LumaChoiceId, string> = {
     ancient: "/submissions/swamp-hop/luma/ancient.png",
 };
 
+const REVEAL_DELAY_MS = 500;
+const RESULT_DISPLAY_MS = 900;
+
 const LumaShrineBonusRound: React.FC<LumaShrineBonusRoundProps> = ({
     gameId,
     userRandomWord,
@@ -58,6 +61,18 @@ const LumaShrineBonusRound: React.FC<LumaShrineBonusRoundProps> = ({
         return () => window.clearTimeout(timer);
     }, [replayRecord, selectedChoice, result]);
 
+    useEffect(() => {
+        if (!revealed || selectedChoice == null || result == null) {
+            return;
+        }
+
+        const timer = window.setTimeout(() => {
+            onComplete(selectedChoice, result);
+        }, RESULT_DISPLAY_MS);
+
+        return () => window.clearTimeout(timer);
+    }, [revealed, selectedChoice, result, onComplete]);
+
     const handlePick = (choiceId: LumaChoiceId) => {
         if (selectedChoice != null) {
             return;
@@ -71,14 +86,7 @@ const LumaShrineBonusRound: React.FC<LumaShrineBonusRoundProps> = ({
         );
         setSelectedChoice(choiceId);
         setResult(resolved);
-        window.setTimeout(() => setRevealed(true), 500);
-    };
-
-    const handleContinue = () => {
-        if (selectedChoice == null || result == null) {
-            return;
-        }
-        onComplete(selectedChoice, result);
+        window.setTimeout(() => setRevealed(true), REVEAL_DELAY_MS);
     };
 
     const selectedLabel =
@@ -91,14 +99,16 @@ const LumaShrineBonusRound: React.FC<LumaShrineBonusRoundProps> = ({
             <div className="luma-shrine-panel">
                 <p className="luma-shrine-title">Luma Shrine Bonus</p>
                 <p className="luma-shrine-subtitle">Tap a Luma to choose</p>
-                <p className="luma-shrine-bank">
-                    Bank:{" "}
-                    {currentBank.toLocaleString([], {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    })}{" "}
-                    APE
-                </p>
+                <div className="luma-shrine-bank">
+                    <p className="luma-shrine-bank-label">Bank</p>
+                    <p className="luma-shrine-bank-value">
+                        {currentBank.toLocaleString([], {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        })}{" "}
+                        APE
+                    </p>
+                </div>
 
                 <div className="luma-shrine-choices">
                     {LUMA_BONUS_CONFIG.choices.map((choice) => {
@@ -138,13 +148,6 @@ const LumaShrineBonusRound: React.FC<LumaShrineBonusRoundProps> = ({
                         <p className="luma-shrine-reveal-label">
                             {selectedLabel}: {result.label}
                         </p>
-                        <button
-                            type="button"
-                            className="luma-shrine-continue"
-                            onClick={handleContinue}
-                        >
-                            Return to the Swamp
-                        </button>
                     </div>
                 )}
             </div>

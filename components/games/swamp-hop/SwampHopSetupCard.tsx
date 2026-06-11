@@ -16,7 +16,6 @@ import { Info } from "lucide-react";
 import { Game } from "@/lib/games";
 import BetAmountInput from "@/components/shared/BetAmountInput";
 import { CustomSlider } from "@/components/shared/CustomSlider";
-import ChipSelection, { Chip } from "@/components/shared/ChipSelection";
 import { APPROX_HOUSE_EDGE_PERCENT } from "./swampHopConfig";
 import { getCrocChancePercent } from "./swampHopLogic";
 
@@ -102,17 +101,6 @@ const SwampHopSetupCard: React.FC<SwampHopSetupCardProps> = ({
 }) => {
     const themeColorBackground = game.themeColorBackground;
     const usdMode = false;
-
-    const chips: Chip[] = [
-        { id: "1", value: 1, image: "/shared/chips/chip_1.png" },
-        { id: "5", value: 5, image: "/shared/chips/chip_5.png" },
-        { id: "10", value: 10, image: "/shared/chips/chip_10.png" },
-        { id: "25", value: 25, image: "/shared/chips/chip_25.png" },
-    ];
-
-    const [selectedChipId, setSelectedChipId] = React.useState<string | null>(
-        null
-    );
 
     const getCurrentWalletAmount = (): number => walletBalance;
 
@@ -255,7 +243,7 @@ const SwampHopSetupCard: React.FC<SwampHopSetupCardProps> = ({
     };
 
     return (
-        <Card className="swamp-hop-setup lg:basis-1/3 p-6 flex flex-col">
+        <Card className="swamp-hop-setup lg:h-full min-h-0 p-6 flex flex-col">
             {currentView === 0 && (
                 <>
                     <CardContent className="font-roboto">
@@ -287,25 +275,6 @@ const SwampHopSetupCard: React.FC<SwampHopSetupCardProps> = ({
                                 themeColorBackground={themeColorBackground}
                             />
                         </div>
-
-                        <ChipSelection
-                            chips={chips}
-                            selectedChipId={selectedChipId}
-                            onChipSelect={(chip) => {
-                                setSelectedChipId(chip.id);
-                                setBetAmount(
-                                    Math.min(
-                                        betAmount + chip.value,
-                                        maxBet,
-                                        walletBalance
-                                    )
-                                );
-                            }}
-                            onRemoveAllBets={() => {
-                                setSelectedChipId(null);
-                                setBetAmount(0);
-                            }}
-                        />
 
                         <div className="mt-8">
                             <CustomSlider
@@ -431,9 +400,7 @@ const SwampHopSetupCard: React.FC<SwampHopSetupCardProps> = ({
                     {ShowInUsdAndStats(true)}
                     {HopsLeftBlock(false)}
 
-                    <div className="flex lg:flex-col justify-evenly items-center gap-4">
-                        {HopsLeftBlock(true)}
-
+                    <div className="flex flex-col items-center gap-6 w-full">
                         <div className="font-roboto flex flex-col items-center gap-3 w-full max-w-[220px]">
                             <button
                                 type="button"
@@ -452,37 +419,36 @@ const SwampHopSetupCard: React.FC<SwampHopSetupCardProps> = ({
                             >
                                 Cash Out
                             </Button>
-                            <div className="min-h-[2.5rem] flex items-center justify-center w-full">
-                                {getCashOutHelperText() != null && (
-                                    <p className="text-xs text-[#91989C] text-center">
-                                        {getCashOutHelperText()}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className="w-full mt-2 pt-3 border-t border-white/10 text-xs text-[#91989C] space-y-1">
-                                <div className="flex justify-between">
-                                    <span>Croc chance (next hop)</span>
-                                    <span className="text-white/90 tabular-nums">
-                                        {getCrocChancePercent(currentHopIndex).toFixed(
-                                            1
-                                        )}
-                                        %
-                                    </span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>Approx. house edge</span>
-                                    <span className="text-white/90">
-                                        ~{APPROX_HOUSE_EDGE_PERCENT}%
-                                    </span>
-                                </div>
-                                <p className="text-[10px] leading-snug pt-1">
-                                    Croc Snap is the only full bust. Shrine Pads
-                                    open the Luma bonus (Safe +15%, Wild ±75%,
-                                    Ancient up to 3×). Croc chance rises after
-                                    hop 6.
+                            {getCashOutHelperText() != null && (
+                                <p className="text-xs text-[#91989C] text-center">
+                                    {getCashOutHelperText()}
                                 </p>
+                            )}
+                        </div>
+
+                        {HopsLeftBlock(true)}
+
+                        <div className="w-full max-w-[220px] pt-3 border-t border-white/10 text-xs text-[#91989C] space-y-1">
+                            <div className="flex justify-between">
+                                <span>Croc chance (next hop)</span>
+                                <span className="text-white/90 tabular-nums">
+                                    {getCrocChancePercent(currentHopIndex).toFixed(
+                                        1
+                                    )}
+                                    %
+                                </span>
                             </div>
+                            <div className="flex justify-between">
+                                <span>Approx. house edge</span>
+                                <span className="text-white/90">
+                                    ~{APPROX_HOUSE_EDGE_PERCENT}%
+                                </span>
+                            </div>
+                            <p className="text-[10px] leading-snug pt-1">
+                                Croc Snap is the only full bust. Shrine Pads open
+                                the Luma bonus (Safe +15%, Wild ±75%, Ancient up
+                                to 3×). Croc chance rises after hop 6.
+                            </p>
                         </div>
                     </div>
                 </CardContent>
